@@ -11,6 +11,15 @@ import {
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router-dom';
+import { 
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
+import ExpenseForm from '@/components/ExpenseForm';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,6 +27,13 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
+  const location = useLocation();
+  const hash = location.hash.slice(1) || 'dashboard';
+
+  const handleNavigate = (route: string) => {
+    window.location.hash = route;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,23 +67,46 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
-            <NavItem icon={<Home size={18} />} href="/" active>
+            <NavItem 
+              icon={<Home size={18} />} 
+              href="#dashboard" 
+              active={hash === 'dashboard'}
+              onClick={() => handleNavigate('dashboard')}
+            >
               Dashboard
             </NavItem>
-            <NavItem icon={<PieChart size={18} />} href="/expenses">
+            <NavItem 
+              icon={<PieChart size={18} />} 
+              href="#expenses" 
+              active={hash === 'expenses'}
+              onClick={() => handleNavigate('expenses')}
+            >
               Expenses
             </NavItem>
-            <NavItem icon={<BarChart size={18} />} href="/reports">
+            <NavItem 
+              icon={<BarChart size={18} />} 
+              href="#reports" 
+              active={hash === 'reports'}
+              onClick={() => handleNavigate('reports')}
+            >
               Reports
             </NavItem>
-            <NavItem icon={<Target size={18} />} href="/goals">
+            <NavItem 
+              icon={<Target size={18} />} 
+              href="#budgets" 
+              active={hash === 'budgets'}
+              onClick={() => handleNavigate('budgets')}
+            >
               Budget Goals
             </NavItem>
           </nav>
 
           {/* Bottom actions */}
           <div className="p-4 border-t">
-            <button className="w-full bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2">
+            <button 
+              className="w-full bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2"
+              onClick={() => setSheetOpen(true)}
+            >
               <PlusCircle size={18} />
               <span>Add Expense</span>
             </button>
@@ -78,6 +117,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </aside>
+
+      {/* Add Expense Sheet for sidebar button */}
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>New Expense</SheetTitle>
+            <SheetDescription>
+              Add a new expense to your budget tracker
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-4">
+            <ExpenseForm onSuccess={() => setSheetOpen(false)} />
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Main content */}
       <main className={cn(
@@ -95,12 +149,17 @@ interface NavItemProps {
   href: string;
   children: React.ReactNode;
   active?: boolean;
+  onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, href, children, active }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon, href, children, active, onClick }) => {
   return (
     <a 
       href={href} 
+      onClick={(e) => {
+        e.preventDefault();
+        onClick && onClick();
+      }}
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
         active ? "bg-budget-primary/10 text-budget-primary font-medium" : "text-gray-600 hover:bg-gray-100"
