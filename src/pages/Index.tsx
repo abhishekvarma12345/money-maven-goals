@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 const Index: React.FC = () => {
   const location = useLocation();
   const hash = location.hash.slice(1) || 'dashboard';
+  const [sheetOpen, setSheetOpen] = React.useState(false);
 
   // Render the appropriate component based on the URL hash
   const renderContent = () => {
@@ -38,7 +39,7 @@ const Index: React.FC = () => {
             {hash.charAt(0).toUpperCase() + hash.slice(1)}
           </h1>
           
-          <Sheet>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
               <Button className="flex items-center gap-2">
                 <Plus size={16} />
@@ -53,7 +54,7 @@ const Index: React.FC = () => {
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-4">
-                <ExpenseForm />
+                <ExpenseForm onSuccess={() => setSheetOpen(false)} />
               </div>
             </SheetContent>
           </Sheet>

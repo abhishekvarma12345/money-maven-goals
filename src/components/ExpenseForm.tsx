@@ -9,7 +9,11 @@ import { CategorySelector } from './CategorySelector';
 import { ExpenseCategory } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
-const ExpenseForm: React.FC = () => {
+interface ExpenseFormProps {
+  onSuccess?: () => void;
+}
+
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
   const [amount, setAmount] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [category, setCategory] = useState<ExpenseCategory>('other');
@@ -49,6 +53,11 @@ const ExpenseForm: React.FC = () => {
       title: "Expense added",
       description: "Your expense has been successfully added",
     });
+
+    // Call onSuccess callback if provided
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
