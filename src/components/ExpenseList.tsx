@@ -1,20 +1,67 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { categoryColors } from '@/lib/data';
 import { Expense, ExpenseCategory } from '@/lib/types';
-import { sampleExpenses } from '@/lib/data';
-import { Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const ExpenseList: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>(sampleExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<ExpenseCategory | 'all'>('all');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
+  const fetchExpenses = async () => {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        setExpenses([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      
+      if (data) {
+        // Convert the data to match our Expense type
+        const formattedExpenses = data.map(expense => ({
+          id: expense.id,
+          amount: expense.amount,
+          description: expense.description,
+          category: expense.category as ExpenseCategory,
+          date: new Date(expense.date)
+        }));
+        setExpenses(formattedExpenses);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch expenses: " + error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -100,39 +147,48 @@ const ExpenseList: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            {filteredExpenses.length > 0 ? (
-              filteredExpenses.map((expense) => (
-                <div
-                  key={expense.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 mb-2 sm:mb-0">
-                    <span className="font-medium">{expense.description}</span>
-                    <span 
-                      className="text-xs px-2 py-0.5 rounded-full capitalize inline-block w-fit"
-                      style={{ 
-                        backgroundColor: `${categoryColors[expense.category]}20`,
-                        color: categoryColors[expense.category]
-                      }}
-                    >
-                      {expense.category}
-                    </span>
+          {loading ? (
+            <div className="flex justify-center items-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              <span className="ml-2 text-gray-500">Loading expenses...</span>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filteredExpenses.length > 0 ? (
+                filteredExpenses.map((expense) => (
+                  <div
+                    key={expense.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 mb-2 sm:mb-0">
+                      <span className="font-medium">{expense.description}</span>
+                      <span 
+                        className="text-xs px-2 py-0.5 rounded-full capitalize inline-block w-fit"
+                        style={{ 
+                          backgroundColor: `${categoryColors[expense.category]}20`,
+                          color: categoryColors[expense.category]
+                        }}
+                      >
+                        {expense.category}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between sm:justify-end sm:gap-6">
+                      <span className="text-sm text-gray-500">
+                        {format(expense.date, 'MMM d, yyyy')}
+                      </span>
+                      <span className="font-medium">${expense.amount.toLocaleString()}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between sm:justify-end sm:gap-6">
-                    <span className="text-sm text-gray-500">
-                      {format(expense.date, 'MMM d, yyyy')}
-                    </span>
-                    <span className="font-medium">${expense.amount.toLocaleString()}</span>
-                  </div>
+                ))
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  {searchTerm || categoryFilter !== 'all' ? 
+                    "No expenses found matching your search." : 
+                    "You haven't added any expenses yet. Add an expense to get started!"}
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No expenses found matching your search.
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
