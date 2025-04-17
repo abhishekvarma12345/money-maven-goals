@@ -41,16 +41,16 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
         throw new Error("User not authenticated");
       }
 
-      // Use type assertion to work around TypeScript limitations
+      // Insert expense into the expenses table
       const { error } = await supabase
-        .from('expenses' as any)
+        .from('expenses')
         .insert({
           user_id: user.id,
           description,
           amount: parseFloat(amount),
           category,
           date: new Date(date).toISOString()
-        } as any);
+        });
       
       if (error) throw error;
       

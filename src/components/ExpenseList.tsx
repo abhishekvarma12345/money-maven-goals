@@ -12,13 +12,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 // Define a type for the raw expense data from Supabase
-interface RawExpense {
+interface DatabaseExpense {
   id: string;
   amount: number;
   description: string;
   category: ExpenseCategory;
   date: string;
   user_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const ExpenseList: React.FC = () => {
@@ -44,17 +46,17 @@ const ExpenseList: React.FC = () => {
         return;
       }
 
-      // Use type assertion to work around TypeScript limitations
+      // Fetch expenses from the database
       const { data, error } = await supabase
-        .from('expenses' as any)
+        .from('expenses')
         .select('*')
-        .eq('user_id', user.id) as { data: RawExpense[] | null, error: any };
+        .eq('user_id', user.id);
       
       if (error) throw error;
       
       if (data) {
         // Convert the data to match our Expense type
-        const formattedExpenses = data.map(expense => ({
+        const formattedExpenses = data.map((expense: DatabaseExpense) => ({
           id: expense.id,
           amount: expense.amount,
           description: expense.description,
