@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { CategorySelector } from './CategorySelector';
 import { ExpenseCategory } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ExpenseFormProps {
   onSuccess?: () => void;
@@ -20,7 +21,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
   const [date, setDate] = useState<string>(new Date().toISOString().substring(0, 10));
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!amount || !description || !category || !date) {
@@ -32,31 +33,48 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
       return;
     }
 
-    // In a real app, this would call an API to save the expense
-    const newExpense = {
-      id: Date.now().toString(),
-      amount: parseFloat(amount),
-      description,
-      category,
-      date: new Date(date),
-    };
+    try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
 
-    console.log('New expense:', newExpense);
-    
-    // Reset form
-    setAmount('');
-    setDescription('');
-    setCategory('other');
-    setDate(new Date().toISOString().substring(0, 10));
-    
-    toast({
-      title: "Expense added",
-      description: "Your expense has been successfully added",
-    });
+      // Insert expense into Supabase
+      const { error } = await supabase
+        .from('expenses')
+        .insert({
+          user_id: user.id,
+          description,
+          amount: parseFloat(amount),
+          category,
+          date: new Date(date).toISOString()
+        });
+      
+      if (error) throw error;
+      
+      // Reset form
+      setAmount('');
+      setDescription('');
+      setCategory('other');
+      setDate(new Date().toISOString().substring(0, 10));
+      
+      toast({
+        title: "Expense added",
+        description: "Your expense has been successfully saved",
+      });
 
-    // Call onSuccess callback if provided
-    if (onSuccess) {
-      onSuccess();
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 

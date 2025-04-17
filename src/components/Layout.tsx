@@ -1,4 +1,7 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
 import { 
   Home, 
   PieChart, 
@@ -7,10 +10,11 @@ import {
   PlusCircle, 
   Settings,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Sheet,
   SheetContent,
@@ -28,11 +32,47 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+
   const hash = location.hash.slice(1) || 'dashboard';
+
+  useEffect(() => {
+    // Check authentication state
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+
+      if (!user) {
+        navigate('/auth');
+      }
+    };
+
+    checkUser();
+
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (!session?.user) {
+        navigate('/auth');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
+  };
 
   const handleNavigate = (route: string) => {
     window.location.hash = route;
   };
+
+  if (!user) return null; // Prevent rendering until auth state is determined
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,7 +141,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </nav>
 
           {/* Bottom actions */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t space-y-2">
             <button 
               className="w-full bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2"
               onClick={() => setSheetOpen(true)}
@@ -109,9 +149,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <PlusCircle size={18} />
               <span>Add Expense</span>
             </button>
-            <button className="w-full mt-2 text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md">
+            <button 
+              className="w-full text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+              onClick={() => {}}
+            >
               <Settings size={18} />
               <span>Settings</span>
+            </button>
+            <button 
+              className="w-full text-red-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+              onClick={handleSignOut}
+            >
+              <LogOut size={18} />
+              <span>Sign Out</span>
             </button>
           </div>
         </div>
