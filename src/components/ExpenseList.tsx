@@ -11,6 +11,16 @@ import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+// Define a type for the raw expense data from Supabase
+interface RawExpense {
+  id: string;
+  amount: number;
+  description: string;
+  category: ExpenseCategory;
+  date: string;
+  user_id: string;
+}
+
 const ExpenseList: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,10 +44,11 @@ const ExpenseList: React.FC = () => {
         return;
       }
 
+      // Use type assertion to work around TypeScript limitations
       const { data, error } = await supabase
-        .from('expenses')
+        .from('expenses' as any)
         .select('*')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id) as { data: RawExpense[] | null, error: any };
       
       if (error) throw error;
       
@@ -176,7 +187,7 @@ const ExpenseList: React.FC = () => {
                       <span className="text-sm text-gray-500">
                         {format(expense.date, 'MMM d, yyyy')}
                       </span>
-                      <span className="font-medium">${expense.amount.toLocaleString()}</span>
+                      <span className="font-medium">${expense.amount.toFixed(2)}</span>
                     </div>
                   </div>
                 ))
