@@ -1,9 +1,10 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useExpenses } from '@/hooks/use-expenses';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getUserSettings } from '@/lib/settings';
+import { supabase } from '@/integrations/supabase/client';
 import {
   LineChart,
   Line,
@@ -23,6 +24,24 @@ import {
 const Charts: React.FC = () => {
   const [timeRange, setTimeRange] = useState<number>(6);
   const { categoryTotals, monthlyTotals, isLoading } = useExpenses({ months: timeRange });
+  const [currencySymbol, setCurrencySymbol] = useState('€');
+
+  useEffect(() => {
+    const loadCurrencySettings = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const settings = await getUserSettings(user.id);
+        if (settings) {
+          const symbol = settings.currency === 'EUR' ? '€' : 
+                        settings.currency === 'USD' ? '$' : 
+                        settings.currency === 'GBP' ? '£' : '€';
+          setCurrencySymbol(symbol);
+        }
+      }
+    };
+
+    loadCurrencySettings();
+  }, []);
 
   if (isLoading) {
     return (
@@ -105,7 +124,7 @@ const Charts: React.FC = () => {
                       <XAxis dataKey="month" />
                       <YAxis />
                       <Tooltip 
-                        formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]} 
+                        formatter={(value: number) => [`${currencySymbol}${value.toLocaleString()}`, "Amount"]} 
                         contentStyle={{ 
                           backgroundColor: "white", 
                           borderColor: "#e5e7eb",
@@ -160,7 +179,7 @@ const Charts: React.FC = () => {
                       </Pie>
                       <Tooltip 
                         formatter={(value: number, name: string) => [
-                          `$${value.toLocaleString()}`, 
+                          `${currencySymbol}${value.toLocaleString()}`, 
                           name.charAt(0).toUpperCase() + name.slice(1)
                         ]}
                         contentStyle={{ 
@@ -198,7 +217,7 @@ const Charts: React.FC = () => {
                       <YAxis />
                       <Tooltip 
                         formatter={(value: number, name: string, props: any) => [
-                          `$${value.toLocaleString()}`, 
+                          `${currencySymbol}${value.toLocaleString()}`, 
                           name === "amount" ? "Amount" : name
                         ]}
                         contentStyle={{ 
