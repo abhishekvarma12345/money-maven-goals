@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { CategorySelector } from './CategorySelector';
+import CategorySelectorWrapper from './CategorySelectorWrapper';
 import { ExpenseCategory } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -138,7 +138,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
 
           <div className="space-y-2">
             <Label>Category</Label>
-            <CategorySelector
+            <CategorySelectorWrapper
               selected={category}
               onSelect={setCategory}
               disabled={isSubmitting}

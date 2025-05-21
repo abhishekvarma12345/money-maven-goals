@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { ExpenseCategory } from '@/lib/types';
-import CategorySelector from './CategorySelector';
+import { CategorySelector } from './CategorySelector';
 
 interface CategorySelectorWrapperProps {
   selected: ExpenseCategory;
   onSelect: React.Dispatch<React.SetStateAction<ExpenseCategory>>;
-  disabled?: boolean; // Add the disabled prop that was missing
+  disabled?: boolean;
 }
 
 const CategorySelectorWrapper: React.FC<CategorySelectorWrapperProps> = ({ 
