@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { categoryColors } from '@/lib/data';
 import { ExpenseCategory } from '@/lib/types';
-import { Home, Car, UtensilsCrossed, Lightbulb, Heart, Music, ShoppingBag, User, GraduationCap, Plane, MoreHorizontal, PlusCircle } from 'lucide-react';
+import { Home, Car, UtensilsCrossed, Lightbulb, Heart, Music, ShoppingBag, User, GraduationCap, Plane, MoreHorizontal, PlusCircle, Target } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
