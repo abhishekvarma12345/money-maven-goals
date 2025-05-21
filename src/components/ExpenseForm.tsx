@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,8 @@ import { CategorySelector } from './CategorySelector';
 import { ExpenseCategory } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { getUserSettings } from '@/lib/settings';
+import { Loader2 } from 'lucide-react';
 
 interface ExpenseFormProps {
   onSuccess?: () => void;
@@ -19,7 +21,26 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
   const [description, setDescription] = useState<string>('');
   const [category, setCategory] = useState<ExpenseCategory>('other');
   const [date, setDate] = useState<string>(new Date().toISOString().substring(0, 10));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currencySymbol, setCurrencySymbol] = useState('€');
   const { toast } = useToast();
+
+  useEffect(() => {
+    const loadCurrencySettings = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const settings = await getUserSettings(user.id);
+        if (settings) {
+          const symbol = settings.currency === 'EUR' ? '€' : 
+                        settings.currency === 'USD' ? '$' : 
+                        settings.currency === 'GBP' ? '£' : '€';
+          setCurrencySymbol(symbol);
+        }
+      }
+    };
+
+    loadCurrencySettings();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +53,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
       });
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       // Get the current user
@@ -75,6 +98,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -87,7 +112,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount ($)</Label>
+            <Label htmlFor="amount">Amount ({currencySymbol})</Label>
             <Input
               id="amount"
               type="number"
@@ -96,6 +121,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
           
@@ -106,6 +132,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               placeholder="What did you spend on?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -114,6 +141,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
             <CategorySelector
               selected={category}
               onSelect={setCategory}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -124,12 +152,22 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
         </CardContent>
         
         <CardFooter>
-          <Button type="submit" className="w-full">Add Expense</Button>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              'Add Expense'
+            )}
+          </Button>
         </CardFooter>
       </form>
     </Card>

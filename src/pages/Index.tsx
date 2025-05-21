@@ -5,6 +5,8 @@ import Dashboard from '@/components/Dashboard';
 import ExpenseList from '@/components/ExpenseList';
 import BudgetGoals from '@/components/BudgetGoals';
 import Charts from '@/components/Charts';
+import Income from '@/components/Income';
+import SettingsPage from '@/components/SettingsPage';
 import { useLocation } from 'react-router-dom';
 
 const Index: React.FC = () => {
@@ -20,6 +22,10 @@ const Index: React.FC = () => {
         return <BudgetGoals />;
       case 'reports':
         return <Charts />;
+      case 'income':
+        return <Income />;
+      case 'settings':
+        return <SettingsPage />;
       case 'dashboard':
       default:
         return <Dashboard />;
@@ -34,4 +40,3 @@ const Index: React.FC = () => {
 };
 
 export default Index;
-

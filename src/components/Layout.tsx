@@ -11,7 +11,8 @@ import {
   Settings,
   Menu,
   X,
-  LogOut
+  LogOut,
+  DollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -123,6 +124,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               Expenses
             </NavItem>
             <NavItem 
+              icon={<DollarSign size={18} />} 
+              href="#income" 
+              active={hash === 'income'}
+              onClick={() => handleNavigate('income')}
+            >
+              Income
+            </NavItem>
+            <NavItem 
               icon={<BarChart size={18} />} 
               href="#reports" 
               active={hash === 'reports'}
@@ -151,7 +160,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </button>
             <button 
               className="w-full text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
-              onClick={() => {}}
+              onClick={() => handleNavigate('settings')}
             >
               <Settings size={18} />
               <span>Settings</span>

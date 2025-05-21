@@ -10,6 +10,7 @@ import { Search, Filter, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getUserSettings } from '@/lib/settings';
 
 // Define a type for the raw expense data from Supabase
 interface DatabaseExpense {
@@ -29,6 +30,7 @@ const ExpenseList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<ExpenseCategory | 'all'>('all');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [currencySymbol, setCurrencySymbol] = useState('€');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,6 +48,15 @@ const ExpenseList: React.FC = () => {
         return;
       }
 
+      // Get user currency settings
+      const settings = await getUserSettings(user.id);
+      if (settings) {
+        const symbol = settings.currency === 'EUR' ? '€' : 
+                      settings.currency === 'USD' ? '$' : 
+                      settings.currency === 'GBP' ? '£' : '€';
+        setCurrencySymbol(symbol);
+      }
+
       // Fetch expenses from the database
       const { data, error } = await supabase
         .from('expenses')
@@ -58,7 +69,7 @@ const ExpenseList: React.FC = () => {
         // Convert the data to match our Expense type
         const formattedExpenses = data.map((expense: DatabaseExpense) => ({
           id: expense.id,
-          amount: expense.amount,
+          amount: parseFloat(expense.amount as any),
           description: expense.description,
           category: expense.category as ExpenseCategory,
           date: new Date(expense.date)
@@ -189,7 +200,7 @@ const ExpenseList: React.FC = () => {
                       <span className="text-sm text-gray-500">
                         {format(expense.date, 'MMM d, yyyy')}
                       </span>
-                      <span className="font-medium">${expense.amount.toFixed(2)}</span>
+                      <span className="font-medium">{currencySymbol}{expense.amount.toFixed(2)}</span>
                     </div>
                   </div>
                 ))
