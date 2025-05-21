@@ -12,7 +12,9 @@ import {
   Menu,
   X,
   LogOut,
-  DollarSign
+  DollarSign,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -31,6 +33,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,89 +97,131 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-40 transition-transform transform",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          "fixed inset-y-0 left-0 bg-white shadow-lg z-40 transition-all duration-300",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          sidebarCollapsed ? "w-20" : "w-64"
         )}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="p-4 border-b">
-            <h1 className="text-2xl font-bold text-budget-primary">MoneyMaven</h1>
-            <p className="text-xs text-gray-500">Personal Finance Tracker</p>
+          <div className={cn(
+            "p-4 border-b flex items-center",
+            sidebarCollapsed ? "justify-center" : "justify-between"
+          )}>
+            {!sidebarCollapsed ? (
+              <>
+                <div>
+                  <h1 className="text-2xl font-bold text-budget-primary">MoneyMaven</h1>
+                  <p className="text-xs text-gray-500">Finance Tracker</p>
+                </div>
+                <button
+                  onClick={() => setSidebarCollapsed(true)}
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setSidebarCollapsed(false)}
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </>
+            )}
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
             <NavItem 
               icon={<Home size={18} />} 
+              label="Dashboard"
               href="#dashboard" 
               active={hash === 'dashboard'}
               onClick={() => handleNavigate('dashboard')}
-            >
-              Dashboard
-            </NavItem>
+              collapsed={sidebarCollapsed}
+            />
             <NavItem 
               icon={<PieChart size={18} />} 
+              label="Expenses"
               href="#expenses" 
               active={hash === 'expenses'}
               onClick={() => handleNavigate('expenses')}
-            >
-              Expenses
-            </NavItem>
+              collapsed={sidebarCollapsed}
+            />
             <NavItem 
               icon={<DollarSign size={18} />} 
+              label="Income"
               href="#income" 
               active={hash === 'income'}
               onClick={() => handleNavigate('income')}
-            >
-              Income
-            </NavItem>
+              collapsed={sidebarCollapsed}
+            />
             <NavItem 
               icon={<BarChart size={18} />} 
+              label="Reports"
               href="#reports" 
               active={hash === 'reports'}
               onClick={() => handleNavigate('reports')}
-            >
-              Reports
-            </NavItem>
+              collapsed={sidebarCollapsed}
+            />
             <NavItem 
               icon={<Target size={18} />} 
+              label="Budget Goals"
               href="#budgets" 
               active={hash === 'budgets'}
               onClick={() => handleNavigate('budgets')}
-            >
-              Budget Goals
-            </NavItem>
+              collapsed={sidebarCollapsed}
+            />
           </nav>
 
           {/* Bottom actions */}
-          <div className="p-4 border-t space-y-2">
-            <button 
-              className="w-full bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2"
-              onClick={() => setSheetOpen(true)}
-            >
-              <PlusCircle size={18} />
-              <span>Add Expense</span>
-            </button>
-            <button 
-              className="w-full text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
-              onClick={() => handleNavigate('settings')}
-            >
-              <Settings size={18} />
-              <span>Settings</span>
-            </button>
-            <button 
-              className="w-full text-red-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
-              onClick={handleSignOut}
-            >
-              <LogOut size={18} />
-              <span>Sign Out</span>
-            </button>
+          <div className={cn(
+            "p-4 border-t space-y-2",
+            sidebarCollapsed && "flex flex-col items-center"
+          )}>
+            {!sidebarCollapsed && (
+              <button 
+                className="w-full text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+                onClick={() => handleNavigate('settings')}
+              >
+                <Settings size={18} />
+                <span>Settings</span>
+              </button>
+            )}
+            {sidebarCollapsed ? (
+              <button 
+                className="text-gray-500 p-2 hover:bg-gray-50 rounded-md w-10 h-10 flex items-center justify-center"
+                onClick={() => handleNavigate('settings')}
+              >
+                <Settings size={18} />
+              </button>
+            ) : null}
+            
+            {!sidebarCollapsed && (
+              <button 
+                className="w-full text-red-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+                onClick={handleSignOut}
+              >
+                <LogOut size={18} />
+                <span>Sign Out</span>
+              </button>
+            )}
+            {sidebarCollapsed ? (
+              <button 
+                className="text-red-500 p-2 hover:bg-gray-50 rounded-md w-10 h-10 flex items-center justify-center"
+                onClick={handleSignOut}
+              >
+                <LogOut size={18} />
+              </button>
+            ) : null}
           </div>
         </div>
       </aside>
 
-      {/* Add Expense Sheet for sidebar button */}
+      {/* Add Expense Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetContent>
           <SheetHeader>
@@ -193,10 +238,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Main content */}
       <main className={cn(
-        "transition-all duration-200 ease-in-out",
-        sidebarOpen ? "lg:ml-64" : "ml-0"
+        "transition-all duration-300 ease-in-out min-h-screen",
+        sidebarOpen && !sidebarCollapsed ? "lg:ml-64" : (sidebarCollapsed ? "lg:ml-20" : "ml-0")
       )}>
-        <div className="p-4 md:p-8">{children}</div>
+        <div className="p-4 md:p-8">
+          {/* Add Expense button for Expenses tab */}
+          {hash === 'expenses' && (
+            <div className="flex justify-end mb-4">
+              <button 
+                onClick={() => setSheetOpen(true)}
+                className="bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center gap-2"
+              >
+                <PlusCircle size={18} />
+                <span>Add Expense</span>
+              </button>
+            </div>
+          )}
+          {children}
+        </div>
       </main>
     </div>
   );
@@ -204,13 +263,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
 interface NavItemProps {
   icon: React.ReactNode;
+  label: string;
   href: string;
-  children: React.ReactNode;
   active?: boolean;
   onClick?: () => void;
+  collapsed?: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, href, children, active, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, onClick, collapsed }) => {
   return (
     <a 
       href={href} 
@@ -220,11 +280,13 @@ const NavItem: React.FC<NavItemProps> = ({ icon, href, children, active, onClick
       }}
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+        collapsed ? "justify-center" : "",
         active ? "bg-budget-primary/10 text-budget-primary font-medium" : "text-gray-600 hover:bg-gray-100"
       )}
+      title={collapsed ? label : undefined}
     >
       {icon}
-      <span>{children}</span>
+      {!collapsed && <span>{label}</span>}
     </a>
   );
 };
