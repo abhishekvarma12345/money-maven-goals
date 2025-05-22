@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -118,51 +118,54 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto animate-fade-in">
-      <CardHeader>
-        <CardTitle>Add New Expense</CardTitle>
-        <CardDescription>Record your spending to keep track of your budget</CardDescription>
+    <Card className="w-full max-w-md mx-auto animate-fade-in hover:shadow-lg transition-all duration-300 border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-700 dark:to-gray-800 pb-4">
+        <CardTitle className="text-gray-800 dark:text-gray-100">Add New Expense</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount ({currencySymbol})</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              disabled={isSubmitting}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="What did you spend on?"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={isSubmitting}
-            />
+        <CardContent className="space-y-4 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="amount" className="text-gray-700 dark:text-gray-300">Amount ({currencySymbol})</Label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                disabled={isSubmitting}
+                className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:ring-gray-400 focus:border-gray-500"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={isSubmitting}
+                className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:ring-gray-400 focus:border-gray-500"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category" className="text-gray-700 dark:text-gray-300">Category</Label>
             <Select
               value={category}
               onValueChange={(value) => setCategory(value as ExpenseCategory)}
               disabled={isSubmitting}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700">
                 {EXPENSE_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat} className="capitalize">
+                  <SelectItem key={cat} value={cat} className="capitalize text-gray-800 dark:text-gray-200">
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </SelectItem>
                 ))}
@@ -171,19 +174,24 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+            <Label htmlFor="description" className="text-gray-700 dark:text-gray-300">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="What did you spend on?"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               disabled={isSubmitting}
+              className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:ring-gray-400 focus:border-gray-500"
             />
           </div>
         </CardContent>
         
-        <CardFooter>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <CardFooter className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 pt-4">
+          <Button 
+            type="submit" 
+            className="w-full bg-gray-700 hover:bg-gray-800 text-white dark:bg-gray-600 dark:hover:bg-gray-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200" 
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
