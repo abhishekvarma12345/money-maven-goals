@@ -111,7 +111,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {!sidebarCollapsed ? (
               <>
                 <div>
-                  <h1 className="text-2xl font-bold text-budget-primary">MoneyMaven</h1>
+                  <h1 className="text-2xl font-bold text-budget-primary">Kubeer</h1>
                   <p className="text-xs text-gray-500">Finance Tracker</p>
                 </div>
                 <button

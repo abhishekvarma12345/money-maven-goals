@@ -5,16 +5,30 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import CategorySelectorWrapper from './CategorySelectorWrapper';
 import { ExpenseCategory } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { getUserSettings } from '@/lib/settings';
 import { Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ExpenseFormProps {
   onSuccess?: () => void;
 }
+
+const EXPENSE_CATEGORIES: ExpenseCategory[] = [
+  'housing', 
+  'transportation', 
+  'food', 
+  'utilities', 
+  'healthcare', 
+  'entertainment', 
+  'shopping', 
+  'personal',
+  'education',
+  'travel',
+  'other'
+];
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
   const [amount, setAmount] = useState<string>('');
@@ -137,12 +151,23 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
           </div>
 
           <div className="space-y-2">
-            <Label>Category</Label>
-            <CategorySelectorWrapper
-              selected={category}
-              onSelect={setCategory}
+            <Label htmlFor="category">Category</Label>
+            <Select
+              value={category}
+              onValueChange={(value) => setCategory(value as ExpenseCategory)}
               disabled={isSubmitting}
-            />
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {EXPENSE_CATEGORIES.map((cat) => (
+                  <SelectItem key={cat} value={cat} className="capitalize">
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
