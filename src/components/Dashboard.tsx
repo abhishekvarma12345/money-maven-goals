@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -13,75 +12,79 @@ import { supabase } from '@/integrations/supabase/client';
 import { getUserSettings } from '@/lib/settings';
 import SmartInsights from '@/components/SmartInsights';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-
 const Dashboard: React.FC = () => {
-  const { expenses, categoryTotals, monthlyTotals, totalExpenses, isLoading: expensesLoading } = useExpenses();
-  const { totalBudget, isLoading: budgetLoading } = useBudgetGoals();
-  const { toast } = useToast();
+  const {
+    expenses,
+    categoryTotals,
+    monthlyTotals,
+    totalExpenses,
+    isLoading: expensesLoading
+  } = useExpenses();
+  const {
+    totalBudget,
+    isLoading: budgetLoading
+  } = useBudgetGoals();
+  const {
+    toast
+  } = useToast();
   const [currencySymbol, setCurrencySymbol] = useState('€');
-
   useEffect(() => {
     const loadCurrencySettings = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (user) {
         const settings = await getUserSettings(user.id);
         if (settings) {
-          const symbol = settings.currency === 'EUR' ? '€' : 
-                        settings.currency === 'USD' ? '$' : 
-                        settings.currency === 'GBP' ? '£' : '€';
+          const symbol = settings.currency === 'EUR' ? '€' : settings.currency === 'USD' ? '$' : settings.currency === 'GBP' ? '£' : '€';
           setCurrencySymbol(symbol);
         }
       }
     };
-
     loadCurrencySettings();
   }, []);
 
   // Calculate month-over-month change
   const calculateMonthlyChange = () => {
     if (monthlyTotals.length < 2) return 0;
-    
     const currentMonth = monthlyTotals[0].amount;
     const lastMonth = monthlyTotals[1].amount;
-    
     if (lastMonth === 0) return 100;
-    
-    return Math.round(((currentMonth - lastMonth) / lastMonth) * 100);
+    return Math.round((currentMonth - lastMonth) / lastMonth * 100);
   };
-
   const monthlyChange = calculateMonthlyChange();
 
   // Calculate budget used percentage
-  const budgetUsedPercentage = totalBudget > 0
-    ? Math.min(Math.round((totalExpenses / totalBudget) * 100), 100)
-    : 0;
-    
+  const budgetUsedPercentage = totalBudget > 0 ? Math.min(Math.round(totalExpenses / totalBudget * 100), 100) : 0;
+
   // Get top spending category
   const topCategory = categoryTotals.length > 0 ? {
     name: categoryTotals[0].category,
     amount: categoryTotals[0].amount,
     percentage: categoryTotals[0].percentage
-  } : { name: 'other', amount: 0, percentage: 0 };
-
+  } : {
+    name: 'other',
+    amount: 0,
+    percentage: 0
+  };
   const recentExpenses = expenses.slice(0, 5);
 
   // Show loading state
   if (expensesLoading || budgetLoading) {
-    return (
-      <div className="space-y-8 animate-fade-in">
+    return <div className="space-y-8 animate-fade-in">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <p className="text-muted-foreground">Your financial overview and insights.</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Array(4).fill(0).map((_, i) => (
-            <Card key={i} className="card-hover">
+          {Array(4).fill(0).map((_, i) => <Card key={i} className="card-hover">
               <CardContent className="p-6">
                 <Skeleton className="h-24 w-full" />
               </CardContent>
-            </Card>
-          ))}
+            </Card>)}
         </div>
 
         <div className="grid gap-4 md:grid-cols-7">
@@ -105,12 +108,9 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="space-y-8 animate-fade-in">
+  return <div className="space-y-8 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight gradient-text">Dashboard</h2>
@@ -133,10 +133,7 @@ const Dashboard: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <h3 className="text-2xl font-bold gradient-text">{currencySymbol}{totalExpenses.toLocaleString()}</h3>
                   <span className={`text-xs font-medium flex items-center ${monthlyChange >= 0 ? 'text-red-500' : 'text-green-500'}`}>
-                    {monthlyChange >= 0 ? 
-                      <ArrowUpRight className="h-3 w-3 mr-1" /> : 
-                      <ArrowDownRight className="h-3 w-3 mr-1" />
-                    }
+                    {monthlyChange >= 0 ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
                     {Math.abs(monthlyChange)}%
                   </span>
                 </div>
@@ -147,7 +144,9 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Budget Usage */}
-        <Card className="card-hover float-animation" style={{ animationDelay: "0.2s" }}>
+        <Card className="card-hover float-animation" style={{
+        animationDelay: "0.2s"
+      }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900">
@@ -166,7 +165,9 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Top Category */}
-        <Card className="card-hover float-animation" style={{ animationDelay: "0.4s" }}>
+        <Card className="card-hover float-animation" style={{
+        animationDelay: "0.4s"
+      }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900">
@@ -185,7 +186,9 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Remaining Budget */}
-        <Card className="card-hover float-animation" style={{ animationDelay: "0.6s" }}>
+        <Card className="card-hover float-animation" style={{
+        animationDelay: "0.6s"
+      }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900">
@@ -207,109 +210,10 @@ const Dashboard: React.FC = () => {
       {/* Charts and Recent Expenses */}
       <div className="grid gap-4 md:grid-cols-7">
         {/* Expenses Over Time */}
-        <Card className="col-span-7 md:col-span-4 card-hover">
-          <CardHeader className="border-b pb-3">
-            <CardTitle className="gradient-text">Expenses Over Time</CardTitle>
-            <CardDescription>Your spending for the last 6 months</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="h-80">
-              {monthlyTotals.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={monthlyTotals}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(107, 114, 128, 0.2)" />
-                    <XAxis dataKey="month" stroke="currentColor" />
-                    <YAxis stroke="currentColor" />
-                    <Tooltip 
-                      formatter={(value: number) => [`${currencySymbol}${value.toLocaleString()}`, "Amount"]} 
-                      labelStyle={{ color: "currentColor" }}
-                      contentStyle={{ 
-                        backgroundColor: "var(--background)",
-                        borderColor: "var(--border)",
-                        borderRadius: "0.375rem",
-                        color: "currentColor"
-                      }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="amount" 
-                      stroke="var(--primary)" 
-                      strokeWidth={3}
-                      dot={{ stroke: "var(--primary)", strokeWidth: 2, r: 4, fill: "var(--background)" }}
-                      activeDot={{ stroke: "var(--primary)", strokeWidth: 2, r: 6, fill: "var(--primary)" }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-muted-foreground">No expense data available</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        
 
         {/* Category Distribution */}
-        <Card className="col-span-7 md:col-span-3 card-hover">
-          <CardHeader className="border-b pb-3">
-            <CardTitle className="gradient-text">Category Distribution</CardTitle>
-            <CardDescription>Your spending by category</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="h-80 flex flex-col items-center justify-center">
-              {categoryTotals.length > 0 ? (
-                <>
-                  <ResponsiveContainer width="100%" height="80%">
-                    <RechartsPieChart>
-                      <Pie
-                        data={categoryTotals}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={2}
-                        dataKey="amount"
-                        nameKey="category"
-                      >
-                        {categoryTotals.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        formatter={(value: number, name: string) => [
-                          `${currencySymbol}${value.toLocaleString()}`, 
-                          name.charAt(0).toUpperCase() + name.slice(1)
-                        ]}
-                        labelStyle={{ display: "none" }}
-                        contentStyle={{ 
-                          backgroundColor: "var(--background)", 
-                          borderColor: "var(--border)",
-                          borderRadius: "0.375rem",
-                          color: "currentColor"
-                        }}
-                      />
-                    </RechartsPieChart>
-                  </ResponsiveContainer>
-                  <div className="flex flex-wrap justify-center gap-2 mt-2">
-                    {categoryTotals.map((category, index) => (
-                      <div key={index} className="flex items-center text-xs">
-                        <div 
-                          className="w-3 h-3 mr-1 rounded-full" 
-                          style={{ backgroundColor: category.color }}
-                        />
-                        <span className="capitalize">{category.category}</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-muted-foreground">No category data available</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        
 
         {/* Recent Expenses */}
         <Card className="col-span-7 card-hover">
@@ -319,12 +223,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="pt-6">
             <div className="space-y-4">
-              {recentExpenses.length > 0 ? (
-                recentExpenses.map((expense) => (
-                  <div 
-                    key={expense.id}
-                    className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
-                  >
+              {recentExpenses.length > 0 ? recentExpenses.map(expense => <div key={expense.id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                     <div className="flex items-center space-x-4">
                       <div className="font-medium">{expense.description}</div>
                       <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize">
@@ -337,19 +236,13 @@ const Dashboard: React.FC = () => {
                       </div>
                       <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-4">
+                  </div>) : <div className="text-center p-4">
                   <p className="text-muted-foreground">No recent expenses</p>
-                </div>
-              )}
+                </div>}
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
