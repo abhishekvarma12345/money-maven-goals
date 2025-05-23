@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Save, Loader2 } from 'lucide-react';
+import { Settings, Save, Loader2, Moon, Sun, Palette } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { getUserSettings, updateUserSettings, CURRENCY_SYMBOLS } from '@/lib/settings';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/components/ThemeProvider';
 
 const SettingsPage: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
@@ -16,6 +17,7 @@ const SettingsPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -79,19 +81,69 @@ const SettingsPage: React.FC = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
+        <h2 className="text-3xl font-bold tracking-tight gradient-text">Settings</h2>
         <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
-      <Card>
-        <CardHeader>
+      {/* Appearance Settings */}
+      <Card className="card-hover">
+        <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            <CardTitle>Currency Settings</CardTitle>
+            <Palette className="w-5 h-5 text-accent" />
+            <CardTitle className="gradient-text">Appearance</CardTitle>
+          </div>
+          <CardDescription>Customize the look and feel of the application</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label>Theme</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'light' ? 'border-primary' : ''}`}
+                  onClick={() => setTheme('light')}
+                >
+                  <div className="flex items-center gap-3">
+                    <Sun className="h-5 w-5" />
+                    <div className="text-left">
+                      <h4 className="text-sm font-medium">Light</h4>
+                      <p className="text-xs text-muted-foreground">Light mode interface</p>
+                    </div>
+                  </div>
+                  {theme === 'light' && <div className="h-2 w-2 rounded-full bg-primary"></div>}
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'dark' ? 'border-primary' : ''}`}
+                  onClick={() => setTheme('dark')}
+                >
+                  <div className="flex items-center gap-3">
+                    <Moon className="h-5 w-5" />
+                    <div className="text-left">
+                      <h4 className="text-sm font-medium">Dark</h4>
+                      <p className="text-xs text-muted-foreground">Dark mode interface</p>
+                    </div>
+                  </div>
+                  {theme === 'dark' && <div className="h-2 w-2 rounded-full bg-primary"></div>}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Currency Settings */}
+      <Card className="card-hover">
+        <CardHeader className="border-b pb-3">
+          <div className="flex items-center gap-2">
+            <Settings className="w-5 h-5 text-accent" />
+            <CardTitle className="gradient-text">Currency Settings</CardTitle>
           </div>
           <CardDescription>Choose the currency to use across the application.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <RadioGroup 
             value={selectedCurrency} 
             onValueChange={setSelectedCurrency} 
@@ -144,7 +196,7 @@ const SettingsPage: React.FC = () => {
           <Separator className="my-6" />
 
           <div className="flex justify-end">
-            <Button onClick={handleSaveSettings} disabled={saving}>
+            <Button onClick={handleSaveSettings} disabled={saving} className="relative overflow-hidden group">
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -154,6 +206,7 @@ const SettingsPage: React.FC = () => {
                 <>
                   <Save className="mr-2 h-4 w-4" />
                   Save Settings
+                  <span className="absolute inset-0 w-full translate-x-[-100%] bg-white/10 transition-transform duration-300 group-hover:translate-x-[100%]"></span>
                 </>
               )}
             </Button>

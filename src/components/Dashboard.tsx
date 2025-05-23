@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -10,6 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { getUserSettings } from '@/lib/settings';
+import SmartInsights from '@/components/SmartInsights';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Dashboard: React.FC = () => {
   const { expenses, categoryTotals, monthlyTotals, totalExpenses, isLoading: expensesLoading } = useExpenses();
@@ -108,24 +111,27 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground">Your financial overview and insights.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight gradient-text">Dashboard</h2>
+          <p className="text-muted-foreground">Your financial overview and insights.</p>
+        </div>
+        <ThemeToggle />
       </div>
 
       {/* Stats overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Expenses */}
-        <Card className="card-hover">
+        <Card className="card-hover float-animation">
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-                <DollarSign className="h-6 w-6 text-blue-600" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900">
+                <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Total Expenses</p>
                 <div className="flex items-center space-x-2">
-                  <h3 className="text-2xl font-bold">{currencySymbol}{totalExpenses.toLocaleString()}</h3>
+                  <h3 className="text-2xl font-bold gradient-text">{currencySymbol}{totalExpenses.toLocaleString()}</h3>
                   <span className={`text-xs font-medium flex items-center ${monthlyChange >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {monthlyChange >= 0 ? 
                       <ArrowUpRight className="h-3 w-3 mr-1" /> : 
@@ -141,15 +147,15 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Budget Usage */}
-        <Card className="card-hover">
+        <Card className="card-hover float-animation" style={{ animationDelay: "0.2s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
-                <Target className="h-6 w-6 text-green-600" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900">
+                <Target className="h-6 w-6 text-green-600 dark:text-green-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Budget Used</p>
-                <h3 className="text-2xl font-bold">{budgetUsedPercentage}%</h3>
+                <h3 className="text-2xl font-bold gradient-text">{budgetUsedPercentage}%</h3>
                 <div className="mt-2">
                   <Progress value={budgetUsedPercentage} className="h-2" />
                 </div>
@@ -160,15 +166,15 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Top Category */}
-        <Card className="card-hover">
+        <Card className="card-hover float-animation" style={{ animationDelay: "0.4s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100">
-                <PieChart className="h-6 w-6 text-purple-600" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900">
+                <PieChart className="h-6 w-6 text-purple-600 dark:text-purple-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Top Category</p>
-                <h3 className="text-2xl font-bold capitalize">{topCategory.name}</h3>
+                <h3 className="text-2xl font-bold gradient-text capitalize">{topCategory.name}</h3>
                 <div className="flex items-center mt-1">
                   <span className="text-sm font-medium">{currencySymbol}{topCategory.amount}</span>
                   <span className="text-xs text-muted-foreground ml-2">({topCategory.percentage}%)</span>
@@ -179,15 +185,15 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Remaining Budget */}
-        <Card className="card-hover">
+        <Card className="card-hover float-animation" style={{ animationDelay: "0.6s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100">
-                <DollarSign className="h-6 w-6 text-yellow-600" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900">
+                <DollarSign className="h-6 w-6 text-yellow-600 dark:text-yellow-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Remaining Budget</p>
-                <h3 className="text-2xl font-bold">{currencySymbol}{Math.max(totalBudget - totalExpenses, 0).toLocaleString()}</h3>
+                <h3 className="text-2xl font-bold gradient-text">{currencySymbol}{Math.max(totalBudget - totalExpenses, 0).toLocaleString()}</h3>
                 <p className="text-xs text-muted-foreground">for this month</p>
               </div>
             </div>
@@ -195,38 +201,42 @@ const Dashboard: React.FC = () => {
         </Card>
       </div>
 
+      {/* Smart Insights Section */}
+      <SmartInsights />
+
       {/* Charts and Recent Expenses */}
       <div className="grid gap-4 md:grid-cols-7">
         {/* Expenses Over Time */}
         <Card className="col-span-7 md:col-span-4 card-hover">
-          <CardHeader>
-            <CardTitle>Expenses Over Time</CardTitle>
+          <CardHeader className="border-b pb-3">
+            <CardTitle className="gradient-text">Expenses Over Time</CardTitle>
             <CardDescription>Your spending for the last 6 months</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="h-80">
               {monthlyTotals.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={monthlyTotals}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="month" />
-                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(107, 114, 128, 0.2)" />
+                    <XAxis dataKey="month" stroke="currentColor" />
+                    <YAxis stroke="currentColor" />
                     <Tooltip 
                       formatter={(value: number) => [`${currencySymbol}${value.toLocaleString()}`, "Amount"]} 
-                      labelStyle={{ color: "#1f2937" }}
+                      labelStyle={{ color: "currentColor" }}
                       contentStyle={{ 
-                        backgroundColor: "white", 
-                        borderColor: "#e5e7eb",
-                        borderRadius: "0.375rem" 
+                        backgroundColor: "var(--background)",
+                        borderColor: "var(--border)",
+                        borderRadius: "0.375rem",
+                        color: "currentColor"
                       }}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="amount" 
-                      stroke="#3b82f6" 
+                      stroke="var(--primary)" 
                       strokeWidth={3}
-                      dot={{ stroke: "#3b82f6", strokeWidth: 2, r: 4, fill: "white" }}
-                      activeDot={{ stroke: "#3b82f6", strokeWidth: 2, r: 6, fill: "#3b82f6" }}
+                      dot={{ stroke: "var(--primary)", strokeWidth: 2, r: 4, fill: "var(--background)" }}
+                      activeDot={{ stroke: "var(--primary)", strokeWidth: 2, r: 6, fill: "var(--primary)" }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -241,11 +251,11 @@ const Dashboard: React.FC = () => {
 
         {/* Category Distribution */}
         <Card className="col-span-7 md:col-span-3 card-hover">
-          <CardHeader>
-            <CardTitle>Category Distribution</CardTitle>
+          <CardHeader className="border-b pb-3">
+            <CardTitle className="gradient-text">Category Distribution</CardTitle>
             <CardDescription>Your spending by category</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="h-80 flex flex-col items-center justify-center">
               {categoryTotals.length > 0 ? (
                 <>
@@ -272,9 +282,10 @@ const Dashboard: React.FC = () => {
                         ]}
                         labelStyle={{ display: "none" }}
                         contentStyle={{ 
-                          backgroundColor: "white", 
-                          borderColor: "#e5e7eb",
-                          borderRadius: "0.375rem" 
+                          backgroundColor: "var(--background)", 
+                          borderColor: "var(--border)",
+                          borderRadius: "0.375rem",
+                          color: "currentColor"
                         }}
                       />
                     </RechartsPieChart>
@@ -302,26 +313,26 @@ const Dashboard: React.FC = () => {
 
         {/* Recent Expenses */}
         <Card className="col-span-7 card-hover">
-          <CardHeader>
-            <CardTitle>Recent Expenses</CardTitle>
+          <CardHeader className="border-b pb-3">
+            <CardTitle className="gradient-text">Recent Expenses</CardTitle>
             <CardDescription>Your latest transactions</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="space-y-4">
               {recentExpenses.length > 0 ? (
                 recentExpenses.map((expense) => (
                   <div 
                     key={expense.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="font-medium">{expense.description}</div>
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 capitalize">
+                      <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize">
                         {expense.category}
                       </div>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
                         {format(expense.date, 'MMM dd, yyyy')}
                       </div>
                       <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>

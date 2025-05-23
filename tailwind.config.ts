@@ -106,12 +106,38 @@ export default {
 						opacity: '1',
 						transform: 'translateY(0)'
 					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0)',
+						boxShadow: '0 5px 15px 0px rgba(0,0,0,0.1)'
+					},
+					'50%': {
+						transform: 'translateY(-5px)',
+						boxShadow: '0 25px 15px 0px rgba(0,0,0,0.05)'
+					}
+				},
+				'pulse-border': {
+					'0%, 100%': {
+						borderColor: 'rgba(59, 130, 246, 0.3)'
+					},
+					'50%': {
+						borderColor: 'rgba(59, 130, 246, 0.8)'
+					}
+				},
+				'shine': {
+					to: {
+						backgroundPosition: '200% center'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.3s ease-out'
+				'fade-in': 'fade-in 0.3s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'pulse-border': 'pulse-border 2s infinite',
+				'shine': 'shine 3s infinite linear'
 			}
 		}
 	},
