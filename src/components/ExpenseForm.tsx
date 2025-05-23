@@ -132,6 +132,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               disabled={isSubmitting}
+              className="dark:text-white"
             />
           </div>
           
@@ -143,6 +144,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={isSubmitting}
+              className="dark:text-white"
             />
           </div>
 
@@ -153,12 +155,12 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               onValueChange={(value) => setCategory(value as ExpenseCategory)}
               disabled={isSubmitting}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full dark:text-white dark:bg-gray-800">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="dark:bg-gray-800">
                 {EXPENSE_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat} className="capitalize">
+                  <SelectItem key={cat} value={cat} className="capitalize dark:text-gray-200">
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </SelectItem>
                 ))}
@@ -174,6 +176,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               disabled={isSubmitting}
+              className="dark:text-white"
             />
           </div>
         </CardContent>

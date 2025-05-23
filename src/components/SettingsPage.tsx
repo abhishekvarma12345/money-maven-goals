@@ -80,8 +80,8 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight truncate">Settings</h2>
+      <div className="mb-6 w-full">
+        <h2 className="text-3xl font-bold tracking-tight mb-1 break-words">Settings</h2>
         <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
@@ -101,7 +101,7 @@ const SettingsPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button 
                   variant={theme === 'light' ? "default" : "outline"}
-                  className={`flex justify-between items-center h-auto py-4 px-6`}
+                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'light' ? 'border-2 border-primary' : ''}`}
                   onClick={() => setTheme('light')}
                 >
                   <div className="flex items-center gap-3">
@@ -111,12 +111,12 @@ const SettingsPage: React.FC = () => {
                       <p className="text-xs text-muted-foreground">Light mode interface</p>
                     </div>
                   </div>
-                  {theme === 'light' && <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>}
+                  {theme === 'light' && <div className="h-3 w-3 rounded-full bg-primary"></div>}
                 </Button>
                 
                 <Button 
                   variant={theme === 'dark' ? "default" : "outline"}
-                  className={`flex justify-between items-center h-auto py-4 px-6`}
+                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'dark' ? 'border-2 border-primary' : ''}`}
                   onClick={() => setTheme('dark')}
                 >
                   <div className="flex items-center gap-3">
@@ -126,7 +126,7 @@ const SettingsPage: React.FC = () => {
                       <p className="text-xs text-muted-foreground">Dark mode interface</p>
                     </div>
                   </div>
-                  {theme === 'dark' && <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>}
+                  {theme === 'dark' && <div className="h-3 w-3 rounded-full bg-primary"></div>}
                 </Button>
               </div>
             </div>

@@ -94,6 +94,10 @@
     @apply bg-background text-foreground;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+  
+  h2 {
+    @apply max-w-full overflow-visible whitespace-normal break-words;
+  }
 }
 
 @layer components {
@@ -123,16 +127,16 @@
   }
 
   .stat-change-positive {
-    @apply text-xs text-budget-success flex items-center;
+    @apply text-xs text-budget-success flex items-center dark:text-green-400;
   }
 
   .stat-change-negative {
-    @apply text-xs text-budget-danger flex items-center;
+    @apply text-xs text-budget-danger flex items-center dark:text-red-400;
   }
 
   .expense-category {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-    @apply border border-gray-200 dark:border-gray-800;
+    @apply border border-gray-200 dark:border-gray-700 dark:text-gray-300;
   }
   
   /* New animations and effects */

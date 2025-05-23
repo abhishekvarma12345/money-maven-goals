@@ -142,8 +142,8 @@ const ExpenseList: React.FC = () => {
   if (isLoading) {
     return (
       <div className="space-y-4 animate-fade-in">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Expenses</h2>
+        <div className="mb-6 w-full">
+          <h2 className="text-3xl font-bold tracking-tight mb-1 break-words">Expenses</h2>
           <p className="text-muted-foreground">Track and manage your spending</p>
         </div>
         
@@ -163,8 +163,8 @@ const ExpenseList: React.FC = () => {
   
   return (
     <div className="space-y-4 animate-fade-in">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Expenses</h2>
+      <div className="mb-6 w-full">
+        <h2 className="text-3xl font-bold tracking-tight mb-1 break-words">Expenses</h2>
         <p className="text-muted-foreground">Track and manage your spending</p>
       </div>
       
@@ -180,14 +180,14 @@ const ExpenseList: React.FC = () => {
         </div>
         
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 px-4 py-2 border rounded-md bg-white">
+          <DropdownMenuTrigger className="flex items-center gap-2 px-4 py-2 border rounded-md bg-background dark:bg-gray-800 dark:border-gray-700">
             <Filter size={18} />
             <span>Filter</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuItem 
               onClick={() => setSelectedCategory('all')}
-              className={selectedCategory === 'all' ? 'bg-gray-100' : ''}
+              className={selectedCategory === 'all' ? 'bg-muted' : ''}
             >
               All Categories
             </DropdownMenuItem>
@@ -195,7 +195,7 @@ const ExpenseList: React.FC = () => {
               <DropdownMenuItem 
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={selectedCategory === category ? 'bg-gray-100' : ''}
+                className={selectedCategory === category ? 'bg-muted' : ''}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </DropdownMenuItem>
@@ -214,21 +214,21 @@ const ExpenseList: React.FC = () => {
               {filteredExpenses.map((expense) => (
                 <div 
                   key={expense.id}
-                  className="flex items-center justify-between p-4 bg-white border rounded-lg shadow-sm hover:bg-gray-50 transition"
+                  className="flex items-center justify-between p-4 bg-card border rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="font-medium">{expense.description}</div>
-                    <div className="text-xs px-2 py-0.5 rounded-full bg-gray-100 capitalize">
+                    <div className="font-medium dark:text-gray-100">{expense.description}</div>
+                    <div className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 dark:text-gray-200 capitalize">
                       {expense.category}
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
                       {format(expense.date, 'MMM d, yyyy')}
                     </div>
-                    <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>
+                    <div className="font-medium dark:text-gray-200">{currencySymbol}{expense.amount.toLocaleString()}</div>
                     <button 
-                      className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-gray-100"
+                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                       onClick={() => handleDeleteExpense(expense.id)}
                       aria-label="Delete expense"
                     >
@@ -240,11 +240,11 @@ const ExpenseList: React.FC = () => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-500">No expenses found</p>
+              <p className="text-gray-500 dark:text-gray-400">No expenses found</p>
               {expenses.length > 0 ? (
-                <p className="text-sm text-gray-400 mt-1">Try adjusting your search or filter</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Try adjusting your search or filter</p>
               ) : (
-                <p className="text-sm text-gray-400 mt-1">Add a new expense to get started</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Add a new expense to get started</p>
               )}
             </div>
           )}
