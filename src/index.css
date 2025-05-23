@@ -49,10 +49,10 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 6%;
+    --card: 220 26% 14%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 217.2 91.2% 59.8%;
@@ -61,8 +61,8 @@
     --secondary: 160 84% 39%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 27% 16.5%;
+    --muted-foreground: 217.9 24.1% 72.5%;
 
     --accent: 237.1 83.3% 66.3%;
     --accent-foreground: 210 40% 98%;
@@ -71,10 +71,10 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --input: 215 27% 16.5%;
     --ring: 224.3 76.3% 48%;
     
-    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-background: 220 26% 14%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 217.2 91.2% 59.8%;
     --sidebar-primary-foreground: 222.2 47.4% 11.2%;
@@ -193,3 +193,22 @@
   background-size: 200% 100%;
   animation: shine 3s infinite linear;
 }
+
+/* Dark mode styles for dialogs, cards, and inputs */
+.dark {
+  --input-background: #1f2937;
+  --input-text: #f3f4f6;
+  --dialog-background: #121827;
+  --dialog-border: #1f2937;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  @apply bg-gray-800 text-gray-100 border-gray-700;
+}
+
+.dark .bg-background {
+  background-color: #121827;
+}
+

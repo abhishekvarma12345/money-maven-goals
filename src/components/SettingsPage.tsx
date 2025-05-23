@@ -99,35 +99,33 @@ const SettingsPage: React.FC = () => {
             <div className="space-y-2">
               <Label>Theme</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button 
-                  variant={theme === 'light' ? "default" : "outline"}
-                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'light' ? 'border-2 border-primary' : ''}`}
+                <div 
+                  className={`relative overflow-hidden rounded-md cursor-pointer transition-all duration-200 ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => setTheme('light')}
                 >
-                  <div className="flex items-center gap-3">
-                    <Sun className="h-5 w-5" />
+                  <div className="flex items-center gap-3 bg-white p-4 dark:bg-gray-800">
+                    <Sun className="h-5 w-5 text-yellow-500" />
                     <div className="text-left">
                       <h4 className="text-sm font-medium">Light</h4>
                       <p className="text-xs text-muted-foreground">Light mode interface</p>
                     </div>
+                    {theme === 'light' && <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary"></div>}
                   </div>
-                  {theme === 'light' && <div className="h-3 w-3 rounded-full bg-primary"></div>}
-                </Button>
+                </div>
                 
-                <Button 
-                  variant={theme === 'dark' ? "default" : "outline"}
-                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'dark' ? 'border-2 border-primary' : ''}`}
+                <div 
+                  className={`relative overflow-hidden rounded-md cursor-pointer transition-all duration-200 ${theme === 'dark' ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => setTheme('dark')}
                 >
-                  <div className="flex items-center gap-3">
-                    <Moon className="h-5 w-5" />
+                  <div className="flex items-center gap-3 bg-gray-900 p-4">
+                    <Moon className="h-5 w-5 text-indigo-400" />
                     <div className="text-left">
-                      <h4 className="text-sm font-medium">Dark</h4>
-                      <p className="text-xs text-muted-foreground">Dark mode interface</p>
+                      <h4 className="text-sm font-medium text-gray-100">Dark</h4>
+                      <p className="text-xs text-gray-400">Dark mode interface</p>
                     </div>
+                    {theme === 'dark' && <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary"></div>}
                   </div>
-                  {theme === 'dark' && <div className="h-3 w-3 rounded-full bg-primary"></div>}
-                </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -149,54 +147,28 @@ const SettingsPage: React.FC = () => {
             onValueChange={setSelectedCurrency} 
             className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
           >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="EUR" id="eur" />
-              <Label htmlFor="eur" className="flex items-center">
-                <span className="text-lg font-medium mr-2">€</span>
-                <span>Euro (EUR)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="USD" id="usd" />
-              <Label htmlFor="usd" className="flex items-center">
-                <span className="text-lg font-medium mr-2">$</span>
-                <span>US Dollar (USD)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="GBP" id="gbp" />
-              <Label htmlFor="gbp" className="flex items-center">
-                <span className="text-lg font-medium mr-2">£</span>
-                <span>British Pound (GBP)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="JPY" id="jpy" />
-              <Label htmlFor="jpy" className="flex items-center">
-                <span className="text-lg font-medium mr-2">¥</span>
-                <span>Japanese Yen (JPY)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="CAD" id="cad" />
-              <Label htmlFor="cad" className="flex items-center">
-                <span className="text-lg font-medium mr-2">C$</span>
-                <span>Canadian Dollar (CAD)</span>
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="AUD" id="aud" />
-              <Label htmlFor="aud" className="flex items-center">
-                <span className="text-lg font-medium mr-2">A$</span>
-                <span>Australian Dollar (AUD)</span>
-              </Label>
-            </div>
+            {Object.entries({
+              "EUR": { symbol: "€", name: "Euro (EUR)" },
+              "USD": { symbol: "$", name: "US Dollar (USD)" },
+              "GBP": { symbol: "£", name: "British Pound (GBP)" },
+              "JPY": { symbol: "¥", name: "Japanese Yen (JPY)" },
+              "CAD": { symbol: "C$", name: "Canadian Dollar (CAD)" },
+              "AUD": { symbol: "A$", name: "Australian Dollar (AUD)" }
+            }).map(([code, { symbol, name }]) => (
+              <div key={code} className={`flex items-center space-x-2 p-3 rounded-md border ${selectedCurrency === code ? 'border-primary bg-primary/10 dark:bg-primary/20' : 'border-gray-200 dark:border-gray-700'}`}>
+                <RadioGroupItem value={code} id={code.toLowerCase()} />
+                <Label htmlFor={code.toLowerCase()} className="flex items-center cursor-pointer w-full">
+                  <span className="text-lg font-medium mr-2">{symbol}</span>
+                  <span className="dark:text-gray-200">{name}</span>
+                </Label>
+              </div>
+            ))}
           </RadioGroup>
 
           <Separator className="my-6" />
 
           <div className="flex justify-end">
-            <Button onClick={handleSaveSettings} disabled={saving} className="relative overflow-hidden group">
+            <Button onClick={handleSaveSettings} disabled={saving} className="relative overflow-hidden group dark:bg-primary dark:hover:bg-primary/80">
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
