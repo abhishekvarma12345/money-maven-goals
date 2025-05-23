@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -12,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getUserSettings } from '@/lib/settings';
 import SmartInsights from '@/components/SmartInsights';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+
 const Dashboard: React.FC = () => {
   const {
     expenses,
@@ -20,14 +22,18 @@ const Dashboard: React.FC = () => {
     totalExpenses,
     isLoading: expensesLoading
   } = useExpenses();
+  
   const {
     totalBudget,
     isLoading: budgetLoading
   } = useBudgetGoals();
+  
   const {
     toast
   } = useToast();
+  
   const [currencySymbol, setCurrencySymbol] = useState('€');
+  
   useEffect(() => {
     const loadCurrencySettings = async () => {
       const {
@@ -38,7 +44,12 @@ const Dashboard: React.FC = () => {
       if (user) {
         const settings = await getUserSettings(user.id);
         if (settings) {
-          const symbol = settings.currency === 'EUR' ? '€' : settings.currency === 'USD' ? '$' : settings.currency === 'GBP' ? '£' : '€';
+          const symbol = settings.currency === 'EUR' ? '€' : 
+                        settings.currency === 'USD' ? '$' : 
+                        settings.currency === 'GBP' ? '£' : 
+                        settings.currency === 'JPY' ? '¥' : 
+                        settings.currency === 'CAD' ? 'C$' :
+                        settings.currency === 'AUD' ? 'A$' : '€';
           setCurrencySymbol(symbol);
         }
       }
@@ -110,10 +121,12 @@ const Dashboard: React.FC = () => {
         </div>
       </div>;
   }
-  return <div className="space-y-8 animate-fade-in">
+  
+  return (
+    <div className="space-y-8 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight gradient-text">Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
           <p className="text-muted-foreground">Your financial overview and insights.</p>
         </div>
         <ThemeToggle />
@@ -125,13 +138,13 @@ const Dashboard: React.FC = () => {
         <Card className="card-hover float-animation">
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50">
                 <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Total Expenses</p>
                 <div className="flex items-center space-x-2">
-                  <h3 className="text-2xl font-bold gradient-text">{currencySymbol}{totalExpenses.toLocaleString()}</h3>
+                  <h3 className="text-2xl font-bold text-foreground">{currencySymbol}{totalExpenses.toLocaleString()}</h3>
                   <span className={`text-xs font-medium flex items-center ${monthlyChange >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {monthlyChange >= 0 ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
                     {Math.abs(monthlyChange)}%
@@ -149,12 +162,12 @@ const Dashboard: React.FC = () => {
       }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50">
                 <Target className="h-6 w-6 text-green-600 dark:text-green-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Budget Used</p>
-                <h3 className="text-2xl font-bold gradient-text">{budgetUsedPercentage}%</h3>
+                <h3 className="text-2xl font-bold text-foreground">{budgetUsedPercentage}%</h3>
                 <div className="mt-2">
                   <Progress value={budgetUsedPercentage} className="h-2" />
                 </div>
@@ -170,12 +183,12 @@ const Dashboard: React.FC = () => {
       }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/50">
                 <PieChart className="h-6 w-6 text-purple-600 dark:text-purple-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Top Category</p>
-                <h3 className="text-2xl font-bold gradient-text capitalize">{topCategory.name}</h3>
+                <h3 className="text-2xl font-bold text-foreground capitalize">{topCategory.name}</h3>
                 <div className="flex items-center mt-1">
                   <span className="text-sm font-medium">{currencySymbol}{topCategory.amount}</span>
                   <span className="text-xs text-muted-foreground ml-2">({topCategory.percentage}%)</span>
@@ -191,12 +204,12 @@ const Dashboard: React.FC = () => {
       }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/50">
                 <DollarSign className="h-6 w-6 text-yellow-600 dark:text-yellow-300" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-muted-foreground">Remaining Budget</p>
-                <h3 className="text-2xl font-bold gradient-text">{currencySymbol}{Math.max(totalBudget - totalExpenses, 0).toLocaleString()}</h3>
+                <h3 className="text-2xl font-bold text-foreground">{currencySymbol}{Math.max(totalBudget - totalExpenses, 0).toLocaleString()}</h3>
                 <p className="text-xs text-muted-foreground">for this month</p>
               </div>
             </div>
@@ -207,42 +220,35 @@ const Dashboard: React.FC = () => {
       {/* Smart Insights Section */}
       <SmartInsights />
 
-      {/* Charts and Recent Expenses */}
-      <div className="grid gap-4 md:grid-cols-7">
-        {/* Expenses Over Time */}
-        
-
-        {/* Category Distribution */}
-        
-
-        {/* Recent Expenses */}
-        <Card className="col-span-7 card-hover">
-          <CardHeader className="border-b pb-3">
-            <CardTitle className="gradient-text">Recent Expenses</CardTitle>
-            <CardDescription>Your latest transactions</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              {recentExpenses.length > 0 ? recentExpenses.map(expense => <div key={expense.id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
-                    <div className="flex items-center space-x-4">
-                      <div className="font-medium">{expense.description}</div>
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize">
-                        {expense.category}
-                      </div>
+      {/* Recent Expenses */}
+      <Card className="col-span-7 card-hover">
+        <CardHeader className="border-b pb-3">
+          <CardTitle>Recent Expenses</CardTitle>
+          <CardDescription>Your latest transactions</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {recentExpenses.length > 0 ? recentExpenses.map(expense => <div key={expense.id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
+                  <div className="flex items-center space-x-4">
+                    <div className="font-medium">{expense.description}</div>
+                    <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize">
+                      {expense.category}
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {format(expense.date, 'MMM dd, yyyy')}
-                      </div>
-                      <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {format(expense.date, 'MMM dd, yyyy')}
                     </div>
-                  </div>) : <div className="text-center p-4">
-                  <p className="text-muted-foreground">No recent expenses</p>
-                </div>}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>;
+                    <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>
+                  </div>
+                </div>) : <div className="text-center p-4">
+                <p className="text-muted-foreground">No recent expenses</p>
+              </div>}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
+
 export default Dashboard;

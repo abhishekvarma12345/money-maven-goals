@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -119,12 +119,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess }) => {
 
   return (
     <Card className="w-full max-w-md mx-auto animate-fade-in">
-      <CardHeader>
-        <CardTitle>Add New Expense</CardTitle>
-        <CardDescription>Record your spending to keep track of your budget</CardDescription>
-      </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-6">
           <div className="space-y-2">
             <Label htmlFor="amount">Amount ({currencySymbol})</Label>
             <Input

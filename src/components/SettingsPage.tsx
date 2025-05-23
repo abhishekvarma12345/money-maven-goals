@@ -81,7 +81,7 @@ const SettingsPage: React.FC = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight gradient-text">Settings</h2>
+        <h2 className="text-3xl font-bold tracking-tight truncate">Settings</h2>
         <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
@@ -90,7 +90,7 @@ const SettingsPage: React.FC = () => {
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
             <Palette className="w-5 h-5 text-accent" />
-            <CardTitle className="gradient-text">Appearance</CardTitle>
+            <CardTitle>Appearance</CardTitle>
           </div>
           <CardDescription>Customize the look and feel of the application</CardDescription>
         </CardHeader>
@@ -100,8 +100,8 @@ const SettingsPage: React.FC = () => {
               <Label>Theme</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button 
-                  variant="outline" 
-                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'light' ? 'border-primary' : ''}`}
+                  variant={theme === 'light' ? "default" : "outline"}
+                  className={`flex justify-between items-center h-auto py-4 px-6`}
                   onClick={() => setTheme('light')}
                 >
                   <div className="flex items-center gap-3">
@@ -111,12 +111,12 @@ const SettingsPage: React.FC = () => {
                       <p className="text-xs text-muted-foreground">Light mode interface</p>
                     </div>
                   </div>
-                  {theme === 'light' && <div className="h-2 w-2 rounded-full bg-primary"></div>}
+                  {theme === 'light' && <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>}
                 </Button>
                 
                 <Button 
-                  variant="outline" 
-                  className={`flex justify-between items-center h-auto py-4 px-6 ${theme === 'dark' ? 'border-primary' : ''}`}
+                  variant={theme === 'dark' ? "default" : "outline"}
+                  className={`flex justify-between items-center h-auto py-4 px-6`}
                   onClick={() => setTheme('dark')}
                 >
                   <div className="flex items-center gap-3">
@@ -126,7 +126,7 @@ const SettingsPage: React.FC = () => {
                       <p className="text-xs text-muted-foreground">Dark mode interface</p>
                     </div>
                   </div>
-                  {theme === 'dark' && <div className="h-2 w-2 rounded-full bg-primary"></div>}
+                  {theme === 'dark' && <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>}
                 </Button>
               </div>
             </div>
@@ -139,7 +139,7 @@ const SettingsPage: React.FC = () => {
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-accent" />
-            <CardTitle className="gradient-text">Currency Settings</CardTitle>
+            <CardTitle>Currency Settings</CardTitle>
           </div>
           <CardDescription>Choose the currency to use across the application.</CardDescription>
         </CardHeader>

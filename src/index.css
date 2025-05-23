@@ -49,7 +49,7 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 6%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -155,7 +155,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent dark:from-primary dark:to-blue-300;
   }
 }
 
