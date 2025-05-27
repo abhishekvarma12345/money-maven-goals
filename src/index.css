@@ -95,16 +95,43 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  h2 {
+  /* Dark mode full page background */
+  body.dark {
+    background-color: hsl(222.2 84% 4.9%);
+    color: hsl(210 40% 98%);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
     @apply max-w-full overflow-visible whitespace-normal break-words;
+    @apply text-foreground;
+  }
+  
+  /* Ensure all text is visible in dark mode */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(210 40% 98%) !important;
+  }
+  
+  .dark p, .dark span, .dark div {
+    color: hsl(210 40% 98%);
+  }
+  
+  .dark .text-muted-foreground {
+    color: hsl(217.9 24.1% 72.5%) !important;
   }
 }
 
 @layer components {
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-2;
     @apply relative overflow-hidden;
-    @apply after:absolute after:inset-0 after:rounded-lg after:shadow-[0_0_15px_rgba(59,130,246,0.3)] after:opacity-0 after:transition-opacity after:duration-500 hover:after:opacity-100 dark:after:shadow-[0_0_15px_rgba(59,130,246,0.5)];
+    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:via-purple-500/20 before:to-pink-500/20 before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100;
+    @apply after:absolute after:inset-0 after:rounded-lg after:shadow-[0_0_30px_rgba(59,130,246,0.4)] after:opacity-0 after:transition-opacity after:duration-500 hover:after:opacity-100;
+  }
+  
+  .card-glow {
+    @apply relative;
+    @apply before:absolute before:-inset-1 before:bg-gradient-to-r before:from-blue-500 before:via-purple-500 before:to-pink-500 before:rounded-lg before:opacity-0 before:blur-sm before:transition-opacity before:duration-500 hover:before:opacity-100;
+    @apply after:absolute after:-inset-1 after:bg-gradient-to-r after:from-blue-500 after:via-purple-500 after:to-pink-500 after:rounded-lg after:opacity-0 after:blur-md after:transition-opacity after:duration-500 hover:after:opacity-50;
   }
   
   .stat-card {
@@ -139,47 +166,81 @@
     @apply border border-gray-200 dark:border-gray-700 dark:text-gray-300;
   }
   
-  /* New animations and effects */
-  @keyframes pulse-border {
-    0%, 100% {
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-    50% {
-      border-color: rgba(59, 130, 246, 0.8);
-    }
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s infinite;
   }
   
-  .pulse-border {
-    @apply border border-transparent;
-    animation: pulse-border 2s infinite;
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
   }
   
-  .glass-effect {
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm;
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
   
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent dark:from-primary dark:to-blue-300;
+  .animate-slide-in-bounce {
+    animation: slide-in-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .theme-card-selected {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+    @apply bg-primary/10 dark:bg-primary/20;
+    @apply border-primary;
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+  }
+  
+  .currency-card-selected {
+    @apply border-primary bg-primary/10 dark:bg-primary/20;
+    @apply ring-2 ring-primary;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
 @keyframes float {
-  0% {
-    transform: translateY(0px);
-    box-shadow: 0 5px 15px 0px rgba(0,0,0,0.1);
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
   }
-  50% {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 15px 0px rgba(0,0,0,0.05);
+  33% {
+    transform: translateY(-10px) rotate(1deg);
   }
-  100% {
-    transform: translateY(0px);
-    box-shadow: 0 5px 15px 0px rgba(0,0,0,0.1);
+  66% {
+    transform: translateY(5px) rotate(-1deg);
   }
 }
 
-.float-animation {
-  animation: float 6s ease-in-out infinite;
+@keyframes slide-in-bounce {
+  0% {
+    transform: translateY(20px) scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-5px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes shine {
@@ -195,13 +256,6 @@
 }
 
 /* Dark mode styles for dialogs, cards, and inputs */
-.dark {
-  --input-background: #1f2937;
-  --input-text: #f3f4f6;
-  --dialog-background: #121827;
-  --dialog-border: #1f2937;
-}
-
 .dark input,
 .dark select,
 .dark textarea {
@@ -209,6 +263,14 @@
 }
 
 .dark .bg-background {
-  background-color: #121827;
+  background-color: hsl(222.2 84% 4.9%);
 }
 
+/* Ensure proper text visibility in dark mode */
+.dark * {
+  color: hsl(210 40% 98%);
+}
+
+.dark .text-muted-foreground {
+  color: hsl(217.9 24.1% 72.5%) !important;
+}
