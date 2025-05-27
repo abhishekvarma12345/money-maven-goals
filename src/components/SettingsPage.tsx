@@ -71,7 +71,12 @@ const SettingsPage: React.FC = () => {
 
   const handleThemeChange = (newTheme: 'light' | 'dark') => {
     setTheme(newTheme);
-    // Apply theme to body class immediately
+    // Apply theme immediately to ensure proper visibility
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(newTheme);
+    
+    // Force body class update
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(newTheme);
   };
@@ -85,17 +90,17 @@ const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 animate-slide-in-bounce">
+    <div className="space-y-6 animate-slow-slide-in">
       <div className="mb-6 w-full">
         <h2 className="text-3xl font-bold tracking-tight mb-1 break-words text-foreground">Settings</h2>
         <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
       {/* Appearance Settings */}
-      <Card className="card-hover card-glow animate-float">
+      <Card className="card-hover card-glow animate-gentle-float">
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
-            <Palette className="w-5 h-5 text-accent animate-bounce-subtle" />
+            <Palette className="w-5 h-5 text-accent" />
             <CardTitle className="text-foreground">Appearance</CardTitle>
           </div>
           <CardDescription>Customize the look and feel of the application</CardDescription>
@@ -105,41 +110,41 @@ const SettingsPage: React.FC = () => {
             <div className="space-y-2">
               <Label className="text-foreground">Theme</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div 
-                  className={`relative overflow-hidden rounded-md cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                <button 
+                  className={`relative overflow-hidden rounded-md transition-all duration-300 transform hover:scale-105 ${
                     theme === 'light' ? 'theme-card-selected' : 'border border-gray-200 dark:border-gray-700'
                   }`}
                   onClick={() => handleThemeChange('light')}
                 >
                   <div className="flex items-center gap-3 bg-white p-4">
-                    <Sun className="h-5 w-5 text-yellow-500 animate-pulse-glow" />
+                    <Sun className="h-5 w-5 text-yellow-500" />
                     <div className="text-left">
                       <h4 className="text-sm font-medium text-gray-900">Light</h4>
                       <p className="text-xs text-gray-600">Light mode interface</p>
                     </div>
                     {theme === 'light' && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary animate-bounce-subtle"></div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary"></div>
                     )}
                   </div>
-                </div>
+                </button>
                 
-                <div 
-                  className={`relative overflow-hidden rounded-md cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                <button 
+                  className={`relative overflow-hidden rounded-md transition-all duration-300 transform hover:scale-105 ${
                     theme === 'dark' ? 'theme-card-selected' : 'border border-gray-200 dark:border-gray-700'
                   }`}
                   onClick={() => handleThemeChange('dark')}
                 >
                   <div className="flex items-center gap-3 bg-gray-900 p-4">
-                    <Moon className="h-5 w-5 text-indigo-400 animate-pulse-glow" />
+                    <Moon className="h-5 w-5 text-indigo-400" />
                     <div className="text-left">
                       <h4 className="text-sm font-medium text-gray-100">Dark</h4>
                       <p className="text-xs text-gray-400">Dark mode interface</p>
                     </div>
                     {theme === 'dark' && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary animate-bounce-subtle"></div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary"></div>
                     )}
                   </div>
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -147,10 +152,10 @@ const SettingsPage: React.FC = () => {
       </Card>
 
       {/* Currency Settings */}
-      <Card className="card-hover card-glow animate-float" style={{ animationDelay: '0.2s' }}>
+      <Card className="card-hover card-glow animate-gentle-float" style={{ animationDelay: '0.2s' }}>
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
-            <Settings className="w-5 h-5 text-accent animate-bounce-subtle" />
+            <Settings className="w-5 h-5 text-accent" />
             <CardTitle className="text-foreground">Currency Settings</CardTitle>
           </div>
           <CardDescription>Choose the currency to use across the application.</CardDescription>
@@ -165,9 +170,9 @@ const SettingsPage: React.FC = () => {
               "CAD": { symbol: "C$", name: "Canadian Dollar (CAD)" },
               "AUD": { symbol: "A$", name: "Australian Dollar (AUD)" }
             }).map(([code, { symbol, name }]) => (
-              <div 
+              <button 
                 key={code} 
-                className={`flex items-center space-x-2 p-3 rounded-md border cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                className={`flex items-center space-x-2 p-3 rounded-md border transition-all duration-300 transform hover:scale-105 ${
                   selectedCurrency === code ? 'currency-card-selected' : 'border-gray-200 dark:border-gray-700'
                 }`}
                 onClick={() => setSelectedCurrency(code)}
@@ -176,14 +181,14 @@ const SettingsPage: React.FC = () => {
                   selectedCurrency === code ? 'border-primary bg-primary' : 'border-gray-300'
                 }`}>
                   {selectedCurrency === code && (
-                    <div className="h-2 w-2 rounded-full bg-white animate-bounce-subtle"></div>
+                    <div className="h-2 w-2 rounded-full bg-white"></div>
                   )}
                 </div>
-                <Label htmlFor={code.toLowerCase()} className="flex items-center cursor-pointer w-full text-foreground">
-                  <span className="text-lg font-medium mr-2 animate-pulse-glow">{symbol}</span>
+                <div className="flex items-center w-full text-foreground">
+                  <span className="text-lg font-medium mr-2">{symbol}</span>
                   <span>{name}</span>
-                </Label>
-              </div>
+                </div>
+              </button>
             ))}
           </div>
 
@@ -193,7 +198,7 @@ const SettingsPage: React.FC = () => {
             <Button 
               onClick={handleSaveSettings} 
               disabled={saving} 
-              className="relative overflow-hidden group transform hover:scale-105 transition-all duration-300 shine-effect animate-pulse-glow"
+              className="relative overflow-hidden group transform hover:scale-105 transition-all duration-300"
             >
               {saving ? (
                 <>
@@ -204,7 +209,6 @@ const SettingsPage: React.FC = () => {
                 <>
                   <Save className="mr-2 h-4 w-4" />
                   Save Settings
-                  <span className="absolute inset-0 w-full translate-x-[-100%] bg-white/10 transition-transform duration-300 group-hover:translate-x-[100%]"></span>
                 </>
               )}
             </Button>

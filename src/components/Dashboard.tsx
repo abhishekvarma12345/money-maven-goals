@@ -84,9 +84,9 @@ const Dashboard: React.FC = () => {
 
   // Show loading state
   if (expensesLoading || budgetLoading) {
-    return <div className="space-y-8 animate-fade-in">
+    return <div className="space-y-8 animate-slow-slide-in">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
           <p className="text-muted-foreground">Your financial overview and insights.</p>
         </div>
 
@@ -123,7 +123,7 @@ const Dashboard: React.FC = () => {
   }
   
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-slow-slide-in">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
@@ -135,7 +135,7 @@ const Dashboard: React.FC = () => {
       {/* Stats overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Expenses */}
-        <Card className="card-hover float-animation">
+        <Card className="card-hover animate-gentle-float">
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50">
@@ -157,9 +157,7 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Budget Usage */}
-        <Card className="card-hover float-animation" style={{
-        animationDelay: "0.2s"
-      }}>
+        <Card className="card-hover animate-gentle-float" style={{ animationDelay: "0.2s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50">
@@ -178,9 +176,7 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Top Category */}
-        <Card className="card-hover float-animation" style={{
-        animationDelay: "0.4s"
-      }}>
+        <Card className="card-hover animate-gentle-float" style={{ animationDelay: "0.4s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/50">
@@ -190,7 +186,7 @@ const Dashboard: React.FC = () => {
                 <p className="text-sm font-medium text-muted-foreground">Top Category</p>
                 <h3 className="text-2xl font-bold text-foreground capitalize">{topCategory.name}</h3>
                 <div className="flex items-center mt-1">
-                  <span className="text-sm font-medium">{currencySymbol}{topCategory.amount}</span>
+                  <span className="text-sm font-medium text-foreground">{currencySymbol}{topCategory.amount}</span>
                   <span className="text-xs text-muted-foreground ml-2">({topCategory.percentage}%)</span>
                 </div>
               </div>
@@ -199,9 +195,7 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Remaining Budget */}
-        <Card className="card-hover float-animation" style={{
-        animationDelay: "0.6s"
-      }}>
+        <Card className="card-hover animate-gentle-float" style={{ animationDelay: "0.6s" }}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/50">
@@ -223,15 +217,15 @@ const Dashboard: React.FC = () => {
       {/* Recent Expenses */}
       <Card className="col-span-7 card-hover">
         <CardHeader className="border-b pb-3">
-          <CardTitle>Recent Expenses</CardTitle>
+          <CardTitle className="text-foreground">Recent Expenses</CardTitle>
           <CardDescription>Your latest transactions</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="space-y-4">
             {recentExpenses.length > 0 ? recentExpenses.map(expense => <div key={expense.id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                   <div className="flex items-center space-x-4">
-                    <div className="font-medium">{expense.description}</div>
-                    <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize">
+                    <div className="font-medium text-foreground">{expense.description}</div>
+                    <div className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-800 capitalize text-foreground">
                       {expense.category}
                     </div>
                   </div>
@@ -239,7 +233,7 @@ const Dashboard: React.FC = () => {
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {format(expense.date, 'MMM dd, yyyy')}
                     </div>
-                    <div className="font-medium">{currencySymbol}{expense.amount.toLocaleString()}</div>
+                    <div className="font-medium text-foreground">{currencySymbol}{expense.amount.toLocaleString()}</div>
                   </div>
                 </div>) : <div className="text-center p-4">
                 <p className="text-muted-foreground">No recent expenses</p>

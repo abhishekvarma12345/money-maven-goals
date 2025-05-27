@@ -46,10 +46,10 @@ const SmartInsights = () => {
   const savingsOpp = getSavingsOpportunity();
 
   return (
-    <div className="space-y-6 animate-slide-in-bounce">
+    <div className="space-y-6 animate-slow-slide-in">
       <div className="mb-6 w-full">
         <h2 className="text-3xl font-bold tracking-tight mb-1 break-words text-foreground flex items-center gap-2">
-          <Brain className="w-8 h-8 text-accent animate-pulse-glow" />
+          <Brain className="w-8 h-8 text-accent animate-gentle-bounce" />
           Smart Insights
         </h2>
         <p className="text-muted-foreground">AI-powered financial recommendations and analysis.</p>
@@ -73,10 +73,10 @@ const SmartInsights = () => {
 
         <TabsContent value="spending" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card className="card-hover card-glow animate-float">
+            <Card className="card-hover card-glow animate-gentle-float">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <PieChart className="w-5 h-5 text-primary animate-bounce-subtle" />
+                  <PieChart className="w-5 h-5 text-primary" />
                   Top Categories
                 </CardTitle>
                 <CardDescription>Your highest spending categories</CardDescription>
@@ -93,10 +93,10 @@ const SmartInsights = () => {
               </CardContent>
             </Card>
 
-            <Card className="card-hover card-glow animate-float" style={{ animationDelay: '0.2s' }}>
+            <Card className="card-hover card-glow animate-gentle-float" style={{ animationDelay: '0.2s' }}>
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-green-500 animate-bounce-subtle" />
+                  <TrendingUp className="w-5 h-5 text-green-500" />
                   Monthly Trend
                 </CardTitle>
                 <CardDescription>Your spending pattern</CardDescription>
@@ -114,10 +114,10 @@ const SmartInsights = () => {
         </TabsContent>
 
         <TabsContent value="savings" className="space-y-4">
-          <Card className="card-hover card-glow animate-float">
+          <Card className="card-hover card-glow animate-gentle-float">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-yellow-500 animate-pulse-glow" />
+                <Sparkles className="w-5 h-5 text-yellow-500 animate-soft-glow" />
                 Savings Opportunity
               </CardTitle>
               <CardDescription>Potential ways to save money</CardDescription>
@@ -130,7 +130,7 @@ const SmartInsights = () => {
                     You could potentially save <strong>€{savingsOpp.potential}</strong> per month.
                   </p>
                 </div>
-                <Button className="w-full shine-effect animate-pulse-glow">
+                <Button className="w-full">
                   <Target className="w-4 h-4 mr-2" />
                   Set Savings Goal
                 </Button>
@@ -140,10 +140,10 @@ const SmartInsights = () => {
         </TabsContent>
 
         <TabsContent value="trends" className="space-y-4">
-          <Card className="card-hover card-glow animate-float">
+          <Card className="card-hover card-glow animate-gentle-float">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <LineChart className="w-5 h-5 text-purple-500 animate-bounce-subtle" />
+                <LineChart className="w-5 h-5 text-purple-500" />
                 Spending Trends
               </CardTitle>
               <CardDescription>Monthly analysis of your expenses</CardDescription>

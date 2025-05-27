@@ -46,42 +46,42 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
 
-    --card: 220 26% 14%;
-    --card-foreground: 210 40% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 215 27% 16.5%;
-    --muted-foreground: 217.9 24.1% 72.5%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 237.1 83.3% 66.3%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 215 27% 16.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
     
-    --sidebar-background: 220 26% 14%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217.2 91.2% 59.8%;
-    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 224.3 76.3% 48%;
+    --sidebar-background: 224 71.4% 4.1%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 263.4 70% 50.4%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 215 27.9% 16.9%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 27.9% 16.9%;
+    --sidebar-ring: 263.4 70% 50.4%;
   }
 }
 
@@ -95,43 +95,79 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  /* Dark mode full page background */
-  body.dark {
-    background-color: hsl(222.2 84% 4.9%);
-    color: hsl(210 40% 98%);
+  /* Ensure proper dark mode background */
+  html.dark,
+  html.dark body,
+  .dark {
+    background-color: hsl(224 71.4% 4.1%) !important;
+    color: hsl(210 20% 98%) !important;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply max-w-full overflow-visible whitespace-normal break-words;
-    @apply text-foreground;
-  }
-  
-  /* Ensure all text is visible in dark mode */
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-    color: hsl(210 40% 98%) !important;
-  }
-  
-  .dark p, .dark span, .dark div {
-    color: hsl(210 40% 98%);
+  /* Force text visibility in dark mode */
+  .dark * {
+    color: hsl(210 20% 98%) !important;
   }
   
   .dark .text-muted-foreground {
-    color: hsl(217.9 24.1% 72.5%) !important;
+    color: hsl(217.9 10.6% 64.9%) !important;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(210 20% 98%) !important;
+  }
+  
+  .dark p, .dark span, .dark div, .dark label {
+    color: hsl(210 20% 98%) !important;
+  }
+  
+  /* Card specific dark mode fixes */
+  .dark .bg-card {
+    background-color: hsl(215 27.9% 16.9%) !important;
+    color: hsl(210 20% 98%) !important;
+  }
+  
+  .dark .bg-background {
+    background-color: hsl(224 71.4% 4.1%) !important;
+  }
+  
+  /* Input and form elements */
+  .dark input,
+  .dark select,
+  .dark textarea {
+    background-color: hsl(215 27.9% 16.9%) !important;
+    color: hsl(210 20% 98%) !important;
+    border-color: hsl(215 27.9% 16.9%) !important;
+  }
+  
+  /* Button visibility */
+  .dark button {
+    color: hsl(210 20% 98%) !important;
   }
 }
 
 @layer components {
+  /* Subtle hover effects */
   .card-hover {
-    @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-2;
-    @apply relative overflow-hidden;
-    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:via-purple-500/20 before:to-pink-500/20 before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100;
-    @apply after:absolute after:inset-0 after:rounded-lg after:shadow-[0_0_30px_rgba(59,130,246,0.4)] after:opacity-0 after:transition-opacity after:duration-500 hover:after:opacity-100;
+    @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1;
   }
   
+  /* Gentle glow effect */
   .card-glow {
     @apply relative;
-    @apply before:absolute before:-inset-1 before:bg-gradient-to-r before:from-blue-500 before:via-purple-500 before:to-pink-500 before:rounded-lg before:opacity-0 before:blur-sm before:transition-opacity before:duration-500 hover:before:opacity-100;
-    @apply after:absolute after:-inset-1 after:bg-gradient-to-r after:from-blue-500 after:via-purple-500 after:to-pink-500 after:rounded-lg after:opacity-0 after:blur-md after:transition-opacity after:duration-500 hover:after:opacity-50;
+  }
+  
+  .card-glow:hover::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(8px);
   }
   
   .stat-card {
@@ -166,20 +202,21 @@
     @apply border border-gray-200 dark:border-gray-700 dark:text-gray-300;
   }
   
-  .animate-bounce-subtle {
-    animation: bounce-subtle 2s infinite;
+  /* Slower, more subtle animations */
+  .animate-gentle-bounce {
+    animation: gentle-bounce 3s ease-in-out infinite;
   }
   
-  .animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
+  .animate-soft-glow {
+    animation: soft-glow 4s ease-in-out infinite;
   }
   
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  .animate-gentle-float {
+    animation: gentle-float 8s ease-in-out infinite;
   }
   
-  .animate-slide-in-bounce {
-    animation: slide-in-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  .animate-slow-slide-in {
+    animation: slow-slide-in 1s ease-out;
   }
   
   .theme-card-selected {
@@ -198,47 +235,41 @@
   }
 }
 
-@keyframes bounce-subtle {
+/* Gentler keyframe animations */
+@keyframes gentle-bounce {
   0%, 100% {
     transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes soft-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
   }
   50% {
     transform: translateY(-5px);
   }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-10px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(5px) rotate(-1deg);
-  }
-}
-
-@keyframes slide-in-bounce {
+@keyframes slow-slide-in {
   0% {
-    transform: translateY(20px) scale(0.8);
+    transform: translateY(20px);
     opacity: 0;
   }
-  60% {
-    transform: translateY(-5px) scale(1.05);
-    opacity: 1;
-  }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -252,25 +283,5 @@
 .shine-effect {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
   background-size: 200% 100%;
-  animation: shine 3s infinite linear;
-}
-
-/* Dark mode styles for dialogs, cards, and inputs */
-.dark input,
-.dark select,
-.dark textarea {
-  @apply bg-gray-800 text-gray-100 border-gray-700;
-}
-
-.dark .bg-background {
-  background-color: hsl(222.2 84% 4.9%);
-}
-
-/* Ensure proper text visibility in dark mode */
-.dark * {
-  color: hsl(210 40% 98%);
-}
-
-.dark .text-muted-foreground {
-  color: hsl(217.9 24.1% 72.5%) !important;
+  animation: shine 2s infinite linear;
 }
