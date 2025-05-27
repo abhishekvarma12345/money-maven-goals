@@ -35,6 +35,48 @@ const ExpenseList: React.FC = () => {
   useEffect(() => {
     fetchExpenses();
     loadCurrencySettings();
+
+    // Set up real-time subscription for new expenses
+    const channel = supabase
+      .channel('expenses-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'expenses'
+        },
+        (payload) => {
+          console.log('New expense added:', payload);
+          // Add the new expense to the list
+          const newExpense = {
+            ...payload.new,
+            date: new Date(payload.new.date),
+            amount: Number(payload.new.amount),
+            category: payload.new.category as ExpenseCategory
+          } as Expense;
+          
+          setExpenses(prev => [newExpense, ...prev]);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'expenses'
+        },
+        (payload) => {
+          console.log('Expense deleted:', payload);
+          // Remove the deleted expense from the list
+          setExpenses(prev => prev.filter(expense => expense.id !== payload.old.id));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
   
   const loadCurrencySettings = async () => {
@@ -74,7 +116,6 @@ const ExpenseList: React.FC = () => {
       }));
       
       setExpenses(formattedExpenses);
-      setFilteredExpenses(formattedExpenses);
     } catch (error: any) {
       console.error('Error fetching expenses:', error);
       toast({
@@ -95,11 +136,6 @@ const ExpenseList: React.FC = () => {
         .eq('id', id);
       
       if (error) throw error;
-      
-      // Remove from local state
-      const updatedExpenses = expenses.filter(expense => expense.id !== id);
-      setExpenses(updatedExpenses);
-      setFilteredExpenses(updatedExpenses);
       
       toast({
         title: "Expense deleted",
