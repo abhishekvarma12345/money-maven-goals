@@ -71,48 +71,44 @@ const SettingsPage: React.FC = () => {
 
   const handleThemeChange = (newTheme: 'light' | 'dark') => {
     setTheme(newTheme);
-    // Apply theme immediately to ensure proper visibility
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(newTheme);
-    
-    // Force body class update
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(newTheme);
+  };
+
+  const handleCurrencySelect = (currency: string) => {
+    setSelectedCurrency(currency);
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-slow-slide-in">
+    <div className="space-y-6">
       <div className="mb-6 w-full">
         <h2 className="text-3xl font-bold tracking-tight mb-1 break-words text-foreground">Settings</h2>
         <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
       {/* Appearance Settings */}
-      <Card className="card-hover card-glow animate-gentle-float">
+      <Card>
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
-            <Palette className="w-5 h-5 text-accent" />
-            <CardTitle className="text-foreground">Appearance</CardTitle>
+            <Palette className="w-5 h-5 text-primary" />
+            <CardTitle>Appearance</CardTitle>
           </div>
           <CardDescription>Customize the look and feel of the application</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label className="text-foreground">Theme</Label>
+              <Label>Theme</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button 
-                  className={`relative overflow-hidden rounded-md transition-all duration-300 transform hover:scale-105 ${
-                    theme === 'light' ? 'theme-card-selected' : 'border border-gray-200 dark:border-gray-700'
+                  className={`relative overflow-hidden rounded-md transition-all duration-200 hover:scale-105 ${
+                    theme === 'light' ? 'theme-card-selected' : 'border border-border'
                   }`}
                   onClick={() => handleThemeChange('light')}
                 >
@@ -129,8 +125,8 @@ const SettingsPage: React.FC = () => {
                 </button>
                 
                 <button 
-                  className={`relative overflow-hidden rounded-md transition-all duration-300 transform hover:scale-105 ${
-                    theme === 'dark' ? 'theme-card-selected' : 'border border-gray-200 dark:border-gray-700'
+                  className={`relative overflow-hidden rounded-md transition-all duration-200 hover:scale-105 ${
+                    theme === 'dark' ? 'theme-card-selected' : 'border border-border'
                   }`}
                   onClick={() => handleThemeChange('dark')}
                 >
@@ -152,11 +148,11 @@ const SettingsPage: React.FC = () => {
       </Card>
 
       {/* Currency Settings */}
-      <Card className="card-hover card-glow animate-gentle-float" style={{ animationDelay: '0.2s' }}>
+      <Card>
         <CardHeader className="border-b pb-3">
           <div className="flex items-center gap-2">
-            <Settings className="w-5 h-5 text-accent" />
-            <CardTitle className="text-foreground">Currency Settings</CardTitle>
+            <Settings className="w-5 h-5 text-primary" />
+            <CardTitle>Currency Settings</CardTitle>
           </div>
           <CardDescription>Choose the currency to use across the application.</CardDescription>
         </CardHeader>
@@ -172,19 +168,19 @@ const SettingsPage: React.FC = () => {
             }).map(([code, { symbol, name }]) => (
               <button 
                 key={code} 
-                className={`flex items-center space-x-2 p-3 rounded-md border transition-all duration-300 transform hover:scale-105 ${
-                  selectedCurrency === code ? 'currency-card-selected' : 'border-gray-200 dark:border-gray-700'
+                className={`flex items-center space-x-2 p-3 rounded-md border transition-all duration-200 hover:scale-105 ${
+                  selectedCurrency === code ? 'currency-card-selected' : 'border-border'
                 }`}
-                onClick={() => setSelectedCurrency(code)}
+                onClick={() => handleCurrencySelect(code)}
               >
                 <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${
-                  selectedCurrency === code ? 'border-primary bg-primary' : 'border-gray-300'
+                  selectedCurrency === code ? 'border-primary bg-primary' : 'border-muted-foreground'
                 }`}>
                   {selectedCurrency === code && (
-                    <div className="h-2 w-2 rounded-full bg-white"></div>
+                    <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>
                   )}
                 </div>
-                <div className="flex items-center w-full text-foreground">
+                <div className="flex items-center w-full">
                   <span className="text-lg font-medium mr-2">{symbol}</span>
                   <span>{name}</span>
                 </div>
@@ -198,7 +194,7 @@ const SettingsPage: React.FC = () => {
             <Button 
               onClick={handleSaveSettings} 
               disabled={saving} 
-              className="relative overflow-hidden group transform hover:scale-105 transition-all duration-300"
+              className="transition-all duration-200 hover:scale-105"
             >
               {saving ? (
                 <>

@@ -76,20 +76,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     window.location.hash = route;
   };
 
-  if (!user) return null; // Prevent rendering until auth state is determined
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Mobile sidebar toggle */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button 
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md bg-white shadow"
+          className="p-2 rounded-md bg-card shadow text-foreground"
         >
           {sidebarOpen ? (
-            <X size={20} className="text-gray-500" />
+            <X size={20} />
           ) : (
-            <Menu size={20} className="text-gray-500" />
+            <Menu size={20} />
           )}
         </button>
       </div>
@@ -97,7 +97,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 bg-white shadow-lg z-40 transition-all duration-300",
+          "fixed inset-y-0 left-0 bg-card shadow-lg z-40 transition-all duration-300 border-r border-border",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           sidebarCollapsed ? "w-20" : "w-64"
         )}
@@ -105,18 +105,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="h-full flex flex-col">
           {/* Logo */}
           <div className={cn(
-            "p-4 border-b flex items-center",
+            "p-4 border-b border-border flex items-center",
             sidebarCollapsed ? "justify-center" : "justify-between"
           )}>
             {!sidebarCollapsed ? (
               <>
                 <div>
-                  <h1 className="text-2xl font-bold text-budget-primary">Kubeer</h1>
-                  <p className="text-xs text-gray-500">Finance Tracker</p>
+                  <h1 className="text-2xl font-bold text-primary">Kubeer</h1>
+                  <p className="text-xs text-muted-foreground">Finance Tracker</p>
                 </div>
                 <button
                   onClick={() => setSidebarCollapsed(true)}
-                  className="text-gray-500 hover:text-gray-800"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <ChevronLeft size={20} />
                 </button>
@@ -125,7 +125,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <>
                 <button
                   onClick={() => setSidebarCollapsed(false)}
-                  className="text-gray-500 hover:text-gray-800"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <ChevronRight size={20} />
                 </button>
@@ -179,12 +179,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Bottom actions */}
           <div className={cn(
-            "p-4 border-t space-y-2",
+            "p-4 border-t border-border space-y-2",
             sidebarCollapsed && "flex flex-col items-center"
           )}>
             {!sidebarCollapsed && (
               <button 
-                className="w-full text-gray-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+                className="w-full text-muted-foreground py-2 px-4 flex items-center justify-center gap-2 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
                 onClick={() => handleNavigate('settings')}
               >
                 <Settings size={18} />
@@ -193,7 +193,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             )}
             {sidebarCollapsed ? (
               <button 
-                className="text-gray-500 p-2 hover:bg-gray-50 rounded-md w-10 h-10 flex items-center justify-center"
+                className="text-muted-foreground p-2 hover:bg-accent hover:text-accent-foreground rounded-md w-10 h-10 flex items-center justify-center transition-colors"
                 onClick={() => handleNavigate('settings')}
               >
                 <Settings size={18} />
@@ -202,7 +202,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             {!sidebarCollapsed && (
               <button 
-                className="w-full text-red-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-gray-50 rounded-md"
+                className="w-full text-red-500 py-2 px-4 flex items-center justify-center gap-2 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
                 onClick={handleSignOut}
               >
                 <LogOut size={18} />
@@ -211,7 +211,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             )}
             {sidebarCollapsed ? (
               <button 
-                className="text-red-500 p-2 hover:bg-gray-50 rounded-md w-10 h-10 flex items-center justify-center"
+                className="text-red-500 p-2 hover:bg-accent hover:text-accent-foreground rounded-md w-10 h-10 flex items-center justify-center transition-colors"
                 onClick={handleSignOut}
               >
                 <LogOut size={18} />
@@ -247,7 +247,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex justify-end mb-4">
               <button 
                 onClick={() => setSheetOpen(true)}
-                className="bg-budget-primary hover:bg-budget-primary/90 text-white rounded-md py-2 px-4 flex items-center gap-2"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md py-2 px-4 flex items-center gap-2 transition-colors"
               >
                 <PlusCircle size={18} />
                 <span>Add Expense</span>
@@ -281,7 +281,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, onClick, c
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
         collapsed ? "justify-center" : "",
-        active ? "bg-budget-primary/10 text-budget-primary font-medium" : "text-gray-600 hover:bg-gray-100"
+        active ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
       )}
       title={collapsed ? label : undefined}
     >

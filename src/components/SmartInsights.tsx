@@ -46,10 +46,10 @@ const SmartInsights = () => {
   const savingsOpp = getSavingsOpportunity();
 
   return (
-    <div className="space-y-6 animate-slow-slide-in">
+    <div className="space-y-6">
       <div className="mb-6 w-full">
         <h2 className="text-3xl font-bold tracking-tight mb-1 break-words text-foreground flex items-center gap-2">
-          <Brain className="w-8 h-8 text-accent animate-gentle-bounce" />
+          <Brain className="w-8 h-8 text-primary" />
           Smart Insights
         </h2>
         <p className="text-muted-foreground">AI-powered financial recommendations and analysis.</p>
@@ -57,15 +57,15 @@ const SmartInsights = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="spending" className="transition-all duration-300">
+          <TabsTrigger value="spending" className="transition-all duration-200">
             <TrendingUp className="w-4 h-4 mr-2" />
             Spending
           </TabsTrigger>
-          <TabsTrigger value="savings" className="transition-all duration-300">
+          <TabsTrigger value="savings" className="transition-all duration-200">
             <Target className="w-4 h-4 mr-2" />
             Savings
           </TabsTrigger>
-          <TabsTrigger value="trends" className="transition-all duration-300">
+          <TabsTrigger value="trends" className="transition-all duration-200">
             <Zap className="w-4 h-4 mr-2" />
             Trends
           </TabsTrigger>
@@ -73,9 +73,9 @@ const SmartInsights = () => {
 
         <TabsContent value="spending" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card className="card-hover card-glow animate-gentle-float">
+            <Card className="transition-all duration-200 hover:shadow-lg">
               <CardHeader>
-                <CardTitle className="text-foreground flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                   <PieChart className="w-5 h-5 text-primary" />
                   Top Categories
                 </CardTitle>
@@ -85,17 +85,17 @@ const SmartInsights = () => {
                 <div className="space-y-3">
                   {topCategories.map((category, index) => (
                     <div key={category.category} className="flex justify-between items-center">
-                      <span className="text-foreground">{category.category}</span>
-                      <span className="font-semibold text-foreground">€{category.amount.toFixed(2)}</span>
+                      <span>{category.category}</span>
+                      <span className="font-semibold">€{category.amount.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="card-hover card-glow animate-gentle-float" style={{ animationDelay: '0.2s' }}>
+            <Card className="transition-all duration-200 hover:shadow-lg">
               <CardHeader>
-                <CardTitle className="text-foreground flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-green-500" />
                   Monthly Trend
                 </CardTitle>
@@ -106,7 +106,7 @@ const SmartInsights = () => {
                   {trend === 'increasing' && <TrendingUp className="w-6 h-6 text-red-500" />}
                   {trend === 'decreasing' && <TrendingDown className="w-6 h-6 text-green-500" />}
                   {trend === 'stable' && <BarChart className="w-6 h-6 text-blue-500" />}
-                  <span className="text-foreground capitalize">{trend} spending</span>
+                  <span className="capitalize">{trend} spending</span>
                 </div>
               </CardContent>
             </Card>
@@ -114,10 +114,10 @@ const SmartInsights = () => {
         </TabsContent>
 
         <TabsContent value="savings" className="space-y-4">
-          <Card className="card-hover card-glow animate-gentle-float">
+          <Card className="transition-all duration-200 hover:shadow-lg">
             <CardHeader>
-              <CardTitle className="text-foreground flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-yellow-500 animate-soft-glow" />
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-yellow-500" />
                 Savings Opportunity
               </CardTitle>
               <CardDescription>Potential ways to save money</CardDescription>
@@ -125,12 +125,12 @@ const SmartInsights = () => {
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                  <p className="text-foreground">
+                  <p>
                     Consider reducing your <strong>{savingsOpp.category}</strong> expenses. 
                     You could potentially save <strong>€{savingsOpp.potential}</strong> per month.
                   </p>
                 </div>
-                <Button className="w-full">
+                <Button className="w-full transition-all duration-200 hover:scale-105">
                   <Target className="w-4 h-4 mr-2" />
                   Set Savings Goal
                 </Button>
@@ -140,9 +140,9 @@ const SmartInsights = () => {
         </TabsContent>
 
         <TabsContent value="trends" className="space-y-4">
-          <Card className="card-hover card-glow animate-gentle-float">
+          <Card className="transition-all duration-200 hover:shadow-lg">
             <CardHeader>
-              <CardTitle className="text-foreground flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2">
                 <LineChart className="w-5 h-5 text-purple-500" />
                 Spending Trends
               </CardTitle>
@@ -151,9 +151,9 @@ const SmartInsights = () => {
             <CardContent>
               <div className="space-y-4">
                 {monthlyTotals.slice(0, 3).map((month, index) => (
-                  <div key={month.month} className="flex justify-between items-center p-2 rounded border dark:border-gray-700">
-                    <span className="text-foreground">{month.month}</span>
-                    <span className="font-semibold text-foreground">€{month.amount.toFixed(2)}</span>
+                  <div key={month.month} className="flex justify-between items-center p-2 rounded border">
+                    <span>{month.month}</span>
+                    <span className="font-semibold">€{month.amount.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
